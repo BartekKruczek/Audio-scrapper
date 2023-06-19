@@ -1,1 +1,13 @@
+YTDL - https://github.com/ytdl-org/youtube-dl
+Audio-scraper - https://github.com/carlthome/audio-scraper
+Scrapy - https://scrapy.org
+Selenium - https://www.selenium.dev/documentation/overview/
+PLGrid - https://portal.plgrid.pl/
+Selenium Web-Scrap doc - https://towardsdatascience.com/how-to-use-selenium-to-web-scrape-with-example-80f9b23a843a
+Beautiful Soup - https://www.crummy.com/software/BeautifulSoup/bs4/doc/#bs4.Tag
+YT-DLP - https://github.com/yt-dlp/yt-dlp
+Spotipy - https://spotipy.readthedocs.io/en/2.22.1/
+Selenium Scrap for YT - https://pastebin.com/eUN8nC2v
+Scrap with bs4 - https://medium.com/analytics-vidhya/capturing-the-elusive-world-of-sound-fetch-and-transcribe-google-podcasts-with-python-76dcf87b6eff
+Google Podcast - https://podcasts.google.com
 
