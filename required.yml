@@ -1,0 +1,11 @@
+name: podcast_bsoup_dlp
+channels:
+  - defaults
+dependencies:
+  - pip
+  - pip:
+      - yt-dlp
+      - requests
+      - wget
+      - pandas
+      - beautifulsoup4
