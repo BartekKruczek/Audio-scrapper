@@ -5,8 +5,33 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import os
 
-URL_setup = ""
+# Variables
+link_list_all = []
+title_list_all = []
+time_list_all = []
 
-prepared_soup = BeautifulSoup(requests.get().text, 'lxml')
+# Here is the input for creator URL profile
+URL_setup = "https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5tZWdhcGhvbmUuZm0vaHViZXJtYW5sYWI?sa=X&ved=0CPABEI7OAigIahgKEwiAxYmplc__AhUAAAAAHQAAAAAQ5x0"
 
-def download()
+# Constructing parsed soup through requests [get().text return the components of page, simple get() returns code]
+prepared_soup = BeautifulSoup(requests.get(URL_setup).text, 'lxml')
+
+for episodes in prepared_soup.find_all('a', {'role': 'listitem'}):
+    # Title of creators show + subtitle of episodes - in case for further validation
+    title = prepared_soup.find('title').text
+    title_list_all.append(title + " " + episodes.find('div', {'class': 'e3ZUqe'}).text)
+
+    # Also through div tags and classes if the first is not working
+    # title = soup.find('div', {'class':'ZfMIwb'}).text
+
+    # Extracting certain links to podcasts through find and JsName tags and splitting from the rest of data
+    link = episodes.find('div', {'jsname': 'fvi9Ef'})['jsdata'].split(';')[1]
+    link_list_all.append(link)
+
+    # Upload time through class
+    upload_time = episodes.find('div', {'class': 'OTz6ee'}).text
+    time_list_all.append(upload_time)
+
+    print(title)
+
+print(prepared_soup)
