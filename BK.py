@@ -37,6 +37,8 @@ try:
             }
         ],
     }
+except Exception:
+    print("Coś nie działa byczqu")
 finally:
     for i in URLS:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
