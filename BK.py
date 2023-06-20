@@ -1,6 +1,6 @@
 # testowanie na użytek własny
-from __future__ import unicode_literals
-import youtube_dl
+# from __future__ import unicode_literals
+# import youtube_dl
 
 # podejście nr 1
 
@@ -36,6 +36,7 @@ try:
                 "preferredcodec": "wav",
             }
         ],
+        "ignoreerrors": True,
     }
 except Exception:
     print("Coś nie działa byczqu")
