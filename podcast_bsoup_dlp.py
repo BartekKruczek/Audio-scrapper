@@ -1,3 +1,5 @@
+# NOTE : If you want to scrap only one creator, substitute url_main_list with url of desired podcasts
+
 import yt_dlp
 import requests
 import wget
