@@ -24,7 +24,7 @@ title_list_all = []
 time_list_all = []
 
 # Here is the input for creator URL profile
-URL_setup = "https://www.youtube.com/watch?v=0Wau6QrESvc&list=PLUWDBVpNIE51d-kaYJyIOIE9fm7RNqI8C"
+URL_setup = "https://podcasts.google.com/feed/aHR0cHM6Ly93d3cuc3ByZWFrZXIuY29tL3Nob3cvMjg5NjMyMS9lcGlzb2Rlcy9mZWVk?sa=X&ved=0CHsQjs4CKARqFwoTCMiFuMyg0f8CFQAAAAAdAAAAABAB&hl=pl"
 
 # Constructing parsed soup through requests [get().text return the components of page, simple get() returns code]
 prepared_soup = BeautifulSoup(requests.get(URL_setup).text, 'lxml')
