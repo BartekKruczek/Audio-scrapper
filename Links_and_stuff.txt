@@ -10,4 +10,8 @@ Spotipy - https://spotipy.readthedocs.io/en/2.22.1/
 Selenium Scrap for YT - https://pastebin.com/eUN8nC2v
 Scrap with bs4 - https://medium.com/analytics-vidhya/capturing-the-elusive-world-of-sound-fetch-and-transcribe-google-podcasts-with-python-76dcf87b6eff
 Google Podcast - https://podcasts.google.com
+Scraper API and blocking solutions - https://www.scraperapi.com/blog/the-10-best-rotating-proxy-services-for-web-scraping/
+Scraper API solutions - https://www.scraperapi.com/blog/10-tips-for-web-scraping/
+Socket Programming in Python - https://realpython.com/python-sockets/        https://www.thepythoncode.com/article/send-receive-files-using-sockets-python
+HuggingFace Audio datasets - https://huggingface.co/docs/datasets/audio_dataset
 
