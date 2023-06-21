@@ -11,7 +11,8 @@ playlist_urls = "https://www.youtube.com/watch?v=BaW_jenozKc"
 URLS = (
     []
 )  # chcemy dodać tu wszystkie linki z playlistu, potem w pętli z tąd wszystko pobrać
-
+video = ""
+yt_url = ""
 try:
     ydl_opts = {
         "format": "m4a/bestaudio/best",
@@ -29,14 +30,17 @@ try:
         "quiet": True,
     }
 
-    # pobieranie linków z całej playlisty
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        playlist_info = ydl.extract_info(playlist_urls, download=False)
-
-        # for link in playlist_info
 
 except Exception:
-    print("Coś nie działa byczqu")
+    print("Coś nie działa!")
 finally:
-    for i in URLS:
-        error_code = ydl.download(i)
+    # pobieranie linków z całej playlisty
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        result = ydl.extract_info(yt_url, download=False)
+
+        if "entries" in result:
+            video = result["entries"]
+
+        for i, item in enumerate(video):
+            video = result["entries"][i]["webpage_url"]
+            ydl.download(video)
