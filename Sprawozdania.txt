@@ -1,2 +1,13 @@
 Sprawozdanie z dnia 21.06.2023
-- 
+- dalsza optymalizacja i automatyzacja kodu
+- dodanie możliwości pobierania transkrypcji, czy to już gotowej czy automatycznie wygenerowanej
+- research możliwości oraz technik wyłuskania jak największej ilości informacji z danego filmiku na yt
+- zaznajomienie się z możliwościami oraz kompatybilnością bazy huggingface
+- uruchomienie kodu źródłowego na wspólnym serwerze
+- powierzchowne zaznajomienie się z opcjami łączenia się z przyznaną mocą obliczeniową (grant)
+
+Napotkane problemy:
+- youtube bardzo blokuje jakiekolwiek większe pobieranie bez użycia osobistego API key (spoiler; da się)
+- znaczne zmniejszenie szybkości pobierania audio bezpośrednio z danej playlisty, a nie z URL konkretnego video
+- nieudolna próba zmiany IP podczas pobierania
+- zamiana transkrypcji na czytelny format
