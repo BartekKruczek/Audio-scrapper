@@ -1,5 +1,8 @@
 import yt_dlp
 import os
+import random
+import time
+from datetime import datetime
 
 
 def download_playlist_audio(playlist_url, output_path):
@@ -12,7 +15,12 @@ def download_playlist_audio(playlist_url, output_path):
                 "preferredquality": "192",
             }
         ],
-        "outtmpl": os.path.join(output_path, "%(title)s.%(ext)s"),
+        "writesubtitles": True,  # pobieranie transkrypcji
+        "writeautomaticsub": False,  # pobieranie automatycznie generowanej transkrypcji
+        "subtitleslangs": ["pl"],  # Wybór języka transkrypcji
+        "outtmpl": os.path.join(
+            output_path, "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s"
+        ),
         "ignoreerrors": True,
         "n_threads": 4,
     }
@@ -30,6 +38,10 @@ def download_playlist_audio(playlist_url, output_path):
 
             # Pobieranie pliku audio
             ydl.download([video_url])
+
+            # żywcem mnie nie wezmą!
+            delay = random.uniform(5, 10)
+            time.sleep(delay)
 
 
 # Przykładowe użycie funkcji dla playlisty na YouTube
