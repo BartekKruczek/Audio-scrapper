@@ -1,6 +1,7 @@
 import yt_dlp
 import os
 import random
+import webvtt
 import time
 from datetime import datetime
 
@@ -42,6 +43,18 @@ def download_playlist_audio(playlist_url, output_path):
             # żywcem mnie nie wezmą!
             delay = random.uniform(5, 10)
             time.sleep(delay)
+
+            # zamiana plików .vtt z transkrypcją na pliki .txx + usuwanie tych pierwszych
+            vtt_filename = os.path.join(output_path, f"{video_title}.vtt")
+            txt_filename = os.path.join(output_path, f"{video_title}.txt")
+
+            if os.path.exists(vtt_filename):
+                captions = webvtt.read(vtt_filename)
+                captions.save(txt_filename, format="txt")
+
+            # Usunięcie pliku .vtt
+            if os.path.exists(vtt_filename):
+                os.remove(vtt_filename)
 
 
 # Przykładowe użycie funkcji dla playlisty na YouTube
