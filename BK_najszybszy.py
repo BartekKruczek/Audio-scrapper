@@ -1,20 +1,27 @@
 import yt_dlp
+import os
 
 URLS = [
     "https://www.youtube.com/watch?v=BaW_jenozKc",
     "https://www.youtube.com/watch?v=xpYw22NaMUc&ab_channel=PrzemekGórczykPodcast",
 ]
+output = "C:/Users/krucz/Documents/Projekty/Anonimowi-Akustycy/Nagrania"
+
 
 try:
     ydl_opts = {
         "format": "m4a/bestaudio/best",
-        # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
         "postprocessors": [
-            {  # Extract audio using ffmpeg
+            {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "wav",
+                "preferredquality": "192",
             }
         ],
+        "outtmpl": os.path.join(
+            output, "%(title)s.%(ext)s"
+        ),  # zewnętrzna ścieżka zapisu
+        "ignoreerrors": True,
     }
 except Exception:
     print("Coś nie działa byczqu")
