@@ -3,9 +3,11 @@ Cele:
 - zmienić kod reprezentatywny by pobierał linki z playlisty, umieszczał je w osobnej liście a następnie w pętli je pobierać -> może przyspieszyć cały proces
 - dodać możliwość wyszukiwania video do pobrania za pomocą tagów i godności twórcy
 - wrzucić wszysko do jednego pliku i zrobić porządek na GitHubie
+- wczytać się w bibliotekę selenium
 
 - https://pypi.org/project/youtube-search-python/
 - https://stackoverflow.com/questions/73130689/searching-for-multiple-youtube-videos-using-yt-dlp-in-python
 - https://stackoverflow.com/questions/15512239/python-get-all-youtube-video-urls-of-a-channel
 - https://stackoverflow.com/questions/62345198/extract-individual-links-from-a-single-youtube-playlist-link-using-python (opcjonalnie)
 - https://stackoverflow.com/questions/43910501/how-do-i-retrieve-individual-video-urls-from-a-playlist-using-youtube-dl-within (ostatnia deska ratunku)
+- https://res.cloudinary.com/acloud-guru/image/fetch/c_thumb,f_auto,q_auto/https://acg-wordpress-content-production.s3.us-west-2.amazonaws.com/app/uploads/2020/06/tmux-3-1-1024x640.png (tmux)
