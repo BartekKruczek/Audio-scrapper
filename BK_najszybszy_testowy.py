@@ -35,3 +35,4 @@ with ydl:
         # loops entries to grab each video_url
         for i, item in enumerate(video):
             video = result["entries"][i]
+            print(video)
