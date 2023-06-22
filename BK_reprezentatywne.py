@@ -75,6 +75,13 @@ try:
                 transcript = transcript_list.find_manually_created_transcript(["pl"])
                 if transcript is not None:
                     print(str(transcript))
+                    text = "\n".join([line["text"] for line in transcript])
+                    with open(
+                        os.path.join(output_path, "transcription.txt"),
+                        "a",
+                        encoding="utf-8",
+                    ) as file:
+                        file.write(text + "\n")
                 else:
                     print("Brak dostępnej transkrypcji")
                     continue
