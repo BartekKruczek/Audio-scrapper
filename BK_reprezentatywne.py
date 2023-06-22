@@ -60,9 +60,8 @@ except Exception as e:
     print(str(e))
 finally:
     # Przykładowe użycie funkcji dla playlisty na YouTube
-    playlist_url = (
-        "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
-    )
+    # playlist_url = "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
+    playlist_url = "https://www.youtube.com/watch?v=Ofo8ULP-6cI&list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq&index=5&ab_channel=Astrofaza"
     output_path = (
         "C:/Users/krucz/Documents/Projekty/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
     )
