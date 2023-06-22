@@ -77,5 +77,5 @@ finally:
     # output_path = (
     #     "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
     # )
-    output_path = "/home/praktyki/workspace/30-stopni-w-cieniu/C:/Users/krucz/Documents/Projekty/Anonimowi-Akustycy/Nagrania"  # serwer ZPS
+    output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu/Nagrania"  # serwer ZPS
     download_playlist_audio(playlist_url, output_path)
