@@ -7,3 +7,5 @@ Cele:
 
 - https://pypi.org/project/youtube-search-python/
 - https://pypi.org/project/youtube-transcript-api/
+- https://stackoverflow.com/questions/31684375/automatically-create-requirements-txt (tworzenie requirements.txt)
+- https://docs.cyfronet.pl/display/PLGDoc/Dokumentacja+PLGrid (podręcznik użytkownika PLGrid)

@@ -11,3 +11,21 @@ Napotkane problemy:
 - znaczne zmniejszenie szybkości pobierania audio bezpośrednio z danej playlisty, a nie z URL konkretnego video
 - nieudolna próba zmiany IP podczas pobierania
 - zamiana transkrypcji na czytelny format, np. txt
+
+Sprawozdanie z dnia 21.06.2023
+- obsługa wyjątków w kodzie źródłowym
+- automatyzacja wyciągania jak największej ilości informacji z filmiku
+- uhierarchizowanie pobierania
+- dalsze zaznajomianie się z podręcznikiem użytkowania PLGrid
+- znaczne polepszenie prędkości pobierania treści z internetu
+
+Napotkane problemy:
+- ochrona kodu źródłowego przed użytkownikiem
+- pobieranie transkrypcji w czytelnym formacie, oraz jej zapisywanie, bez jednoczesnego pobierania audio z video
+- bardzo mała ilość video z tranksrypcją w języku polskim (dodaną przez autora)
+
+Cele:
+- dodanie możliwości automatycznego przeszukiwania platformy yt, pod kątem podcastów, po wpisaniu godności twórcy
+- implementacja zmiany IP
+- wyciągnięcie znaczników czasowych z transkrypcji
+- lepsze nazewnictwo plików w celu lepszej, przyszłościowej pracy
