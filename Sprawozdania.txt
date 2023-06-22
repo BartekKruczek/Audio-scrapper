@@ -10,4 +10,4 @@ Napotkane problemy:
 - youtube bardzo blokuje jakiekolwiek większe pobieranie bez użycia osobistego API key (spoiler; da się)
 - znaczne zmniejszenie szybkości pobierania audio bezpośrednio z danej playlisty, a nie z URL konkretnego video
 - nieudolna próba zmiany IP podczas pobierania
-- zamiana transkrypcji na czytelny format
+- zamiana transkrypcji na czytelny format, np. txt
