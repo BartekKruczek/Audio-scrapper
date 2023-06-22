@@ -79,7 +79,8 @@ try:
                     print("Brak dostępnej transkrypcji")
                     continue
             except Exception as e:
-                print(str(e))
+                # print(str(e))
+                pass
 
     def combining_all():
         global kompendium
