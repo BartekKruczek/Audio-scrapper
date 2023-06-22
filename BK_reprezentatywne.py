@@ -71,19 +71,16 @@ try:
             URLS.append(str(url))
 
         # pobieranie
-
         if len(URLS) > 0:
-            downloaded_files = []
-            while len(URLS) > 0:
+            for i in URLS:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    if len(glob.glob(output_path + "*.wav")) != len(downloaded_files):
-                        i = URLS[0]  # Pobierz pierwszy URL z listy
+                    if len(glob.glob(output_path + "*.wav")) != len(URLS):
                         ydl.download(i)
-                        downloaded_files.append(i)
-                        URLS.remove(i)  # Usuń pobrany URL z listy URLS
                     else:
                         break
-            print("Pobrano wszystkie pliki")
+                    print("Pobrano wszystkie pliki")
+                    break
+            URLS.remove(i)
         else:
             print("Brak URLS do pobrania")
 
