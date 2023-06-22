@@ -104,9 +104,8 @@ finally:
     #     "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
     # )
     output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu/Nagrania"  # serwer ZPS
-    output_file = "transcript.txt"
     download_playlist_audio(
-        playlist_url, output_path, False
+        playlist_url, output_path, True
     )  # argument boolean determinuje czy pobieramy czy tylko ekstrahujemy linki
     extracting_id()
     combining_all()
