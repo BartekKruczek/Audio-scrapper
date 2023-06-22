@@ -140,11 +140,14 @@ import glob
 from youtubesearchpython import *
 import requests
 import webvtt
+from youtube_transcript_api import YouTubeTranscriptApi
 
 try:
+    kompendium = {}
     URLS = []
+    Ids = []
 
-    def download_playlist_audio(playlist_url, output_path):
+    def download_playlist_audio(playlist_url, output_path, download):
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -154,9 +157,6 @@ try:
                     "preferredquality": "192",
                 }
             ],
-            "writesubtitles": False,  # pobieranie transkrypcji
-            "writeautomaticsub": False,  # pobieranie automatycznie generowanej transkrypcji
-            "subtitleslangs": ["en"],  # Wybór języka transkrypcji
             "outtmpl": os.path.join(
                 output_path, "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s"
             ),
@@ -176,24 +176,45 @@ try:
             URLS.append(str(url))
 
         # pobieranie
-        if len(URLS) > 0:
-            for i in URLS:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    if len(glob.glob(output_path + "*.wav")) != len(URLS):
-                        ydl.download(i)
-                        delay = random.uniform(5, 10)
-                        time.sleep(delay)
-                    else:
+        if download == True:
+            if len(URLS) > 0:
+                for i in URLS:
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        if len(glob.glob(output_path + "*.wav")) != len(URLS):
+                            ydl.download(i)
+                            delay = random.uniform(5, 10)
+                            time.sleep(delay)
+                        else:
+                            break
+                        print("Pobrano wszystkie pliki")
                         break
-                    print("Pobrano wszystkie pliki")
-                    break
-            URLS.remove(i)
+                URLS.remove(i)
+            else:
+                print("Brak URLS do pobrania")
         else:
-            print("Brak URLS do pobrania")
+            # print(URLS)
+            pass
 
-    def download_transcription(url, output_file):
-        pass
-        # na pewno potrzebujemy uzyskać video_id, później przy pomocy bib. transcript-api szukamy tych co mają transkrypce stworozną przez autora i je pobieramy
+    def extracting_id():
+        for info in URLS:
+            videoInfo = Video.getInfo(info, mode=ResultMode.json)
+            # print(videoInfo)
+            value = videoInfo["id"]
+            Ids.append(value)
+        # print(str(Ids))
+
+    def download_transcription():
+        for key in kompendium.keys():
+            transcript_list = YouTubeTranscriptApi.list_transcripts(key)
+            transcript = transcript_list.find_manually_created_transcript(["pl"])
+            if transcript is not None:
+                print(str(transcript))
+            else:
+                print("Brak dostępnej transkrypcji")
+
+    def combining_all():
+        kompendium = dict(zip(Ids, URLS))
+        return kompendium
 
 except Exception as e:
     print(str(e))
@@ -206,5 +227,10 @@ finally:
     )
     # output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu/Nagrania"  # serwer ZPS
     output_file = "transcript.txt"
-    download_playlist_audio(playlist_url, output_path)
-    # download_transcription(playlist_url, output_file)
+    download_playlist_audio(
+        playlist_url, output_path, False
+    )  # argument boolean determinuje czy pobieramy czy tylko ekstrahujemy linki
+    extracting_id()
+    combining_all()
+    print(combining_all())
+    download_transcription()
