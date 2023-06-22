@@ -205,14 +205,20 @@ try:
 
     def download_transcription():
         for key in kompendium.keys():
-            transcript_list = YouTubeTranscriptApi.list_transcripts(key)
-            transcript = transcript_list.find_manually_created_transcript(["pl"])
-            if transcript is not None:
-                print(str(transcript))
-            else:
-                print("Brak dostępnej transkrypcji")
+            try:
+                # print(key)  # debug
+                transcript_list = YouTubeTranscriptApi.list_transcripts(key)
+                transcript = transcript_list.find_manually_created_transcript(["pl"])
+                if transcript is not None:
+                    print(str(transcript))
+                else:
+                    print("Brak dostępnej transkrypcji")
+                    continue
+            except Exception as e:
+                print(str(e))
 
     def combining_all():
+        global kompendium
         kompendium = dict(zip(Ids, URLS))
         return kompendium
 
@@ -220,7 +226,7 @@ except Exception as e:
     print(str(e))
 finally:
     playlist_url = (
-        "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq"
+        "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
     )
     output_path = (
         "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
