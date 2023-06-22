@@ -29,24 +29,6 @@ try:
             "n_threads": 4,
         }
 
-        # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        #     playlist_info = ydl.extract_info(playlist_url, download=False)
-        #     playlist_title = playlist_info["title"]
-        #     print(f"Pobieranie audio z playlisty: {playlist_title}")
-
-        #     for video in playlist_info["entries"]:
-        #         video_title = video["title"]
-        #         video_url = video["url"]
-
-        #         print(f"Pobieranie audio z filmu: {video_title}")
-
-        #         # Pobieranie pliku audio
-        #         ydl.download([video_url])
-
-        #         # żywcem mnie nie wezmą!
-        #         delay = random.uniform(5, 10)
-        #         time.sleep(delay)
-
         #         # zamiana plików .vtt z transkrypcją na pliki .txx + usuwanie tych pierwszych
         #         vtt_filename = os.path.join(output_path, f"{video_title}.vtt")
         #         txt_filename = os.path.join(output_path, f"{video_title}.txt")
@@ -76,6 +58,8 @@ try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     if len(glob.glob(output_path + "*.wav")) != len(URLS):
                         ydl.download(i)
+                        delay = random.uniform(5, 10)
+                        time.sleep(delay)
                     else:
                         break
                     print("Pobrano wszystkie pliki")
@@ -88,10 +72,10 @@ except Exception as e:
     print(str(e))
 finally:
     playlist_url = (
-        "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq"
+        "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
     )
-    output_path = (
-        "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
-    )
-    # output_path = "/home/praktyki/workspace/30-stopni-w-cieniu/C:/Users/krucz/Documents/Projekty/Anonimowi-Akustycy/Nagrania"  # serwer ZPS
+    # output_path = (
+    #     "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
+    # )
+    output_path = "/home/praktyki/workspace/30-stopni-w-cieniu/C:/Users/krucz/Documents/Projekty/Anonimowi-Akustycy/Nagrania"  # serwer ZPS
     download_playlist_audio(playlist_url, output_path)
