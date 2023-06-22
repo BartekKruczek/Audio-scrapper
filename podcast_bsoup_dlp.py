@@ -1,4 +1,6 @@
-# NOTE : If you want to scrap only one creator, substitute url_main_list with url of desired podcasts
+# NOTE : If you want to search only one creator, substitute url_main_list with url of desired podcasts
+
+# This is the main version of gp_dlp
 
 import yt_dlp
 import requests
@@ -11,6 +13,7 @@ import os
 options = {
         "format": "m4a/bestaudio/best",
         # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
+	"socket_timeout": '20',
         "postprocessors": [
             {  # Extract audio using ffmpeg
                 "key": "FFmpegExtractAudio",
@@ -29,9 +32,18 @@ time_list_all = []
 url_main_list = []
 channels_title_list = []
 
+# Directory management for server storage
+os.chdir("/mnt/s01/praktyki/")
+
+if os.path.exists("gp_storage"):
+    os.chdir("gp_storage")
+else:
+    os.mkdir("gp_storage")
+    os.chdir("gp_storage")
+
 # Here is the input for main URL
-URL_setup = "https://podcasts.google.com/?hl=pl"
-# URL_setup = "https://podcasts.google.com/search/polskie?hl=pl" # Polish search website
+# URL_setup = "https://podcasts.google.com/?hl=pl"
+URL_setup = "https://podcasts.google.com/search/polskie?hl=pl" # Polish search website
 
 # Constructing parsed soup through requests [get().text return the components of page, simple get() returns code]
 prepared_soup = BeautifulSoup(requests.get(URL_setup).text, 'lxml')
