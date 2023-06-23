@@ -32,4 +32,8 @@ Cele:
 
 Sprawozdanie z dnia 23.06.2023
 - naprawa pobierania transkrypcji z znacznikami czasowymi
-- naprawa zapisu plików do osobnych, stosownych podfolderów
+- naprawa zapisu plików do osobnych, stosownych folderów
+- próba implementacji zmiany IP w kodzie źródłowym
+
+Napotkane problemy:
+- jak sprawdzić czy na serwerze znajduję się już plik z transkrypcją, oszczędność czasu i łącza

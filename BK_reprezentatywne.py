@@ -12,7 +12,7 @@ try:
     URLS = []
     Ids = []
 
-    def download_playlist_audio(playlist_url, output_path, download):
+    def download_playlist_audio(playlist_urls, output_path, download):
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -25,29 +25,32 @@ try:
             "outtmpl": os.path.join(
                 output_path,
                 "Nagrania",
+                "%(playlist)s",
                 "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s",
             ),
             "ignoreerrors": True,
             "n_threads": 4,
         }
 
-        playlistVideos = Playlist.getVideos(playlist_url)
+        for playlist_url in playlist_urls:
+            playlistVideos = Playlist.getVideos(playlist_url)
 
-        # wyodrębnianie url
-        for key in playlistVideos:
-            value = playlistVideos[key]
-            # print(value)
+            for key in playlistVideos:
+                value = playlistVideos[key]
 
-        for video in value:
-            url = video["link"]
-            URLS.append(str(url))
+            for video in value:
+                url = video["link"]
+                URLS.append(str(url))
 
-        # pobieranie
         if download == True:
             if len(URLS) > 0:
                 for i in URLS:
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        if len(glob.glob(output_path + "*.wav")) != len(URLS):
+                        if len(
+                            glob.glob(
+                                os.path.join(output_path, "Nagrania", "*", "*.wav")
+                            )
+                        ) != len(URLS):
                             ydl.download(i)
                             delay = random.uniform(5, 10)
                             time.sleep(delay)
@@ -70,7 +73,7 @@ try:
             Ids.append(value)
         # print(str(Ids))
 
-    def download_transcription():
+    def download_transcription(output_path):
         transcripts_folder = os.path.join(output_path, "Transkrypcja")
         os.makedirs(transcripts_folder, exist_ok=True)
 
@@ -110,15 +113,21 @@ try:
 except Exception as e:
     print(str(e))
 finally:
-    playlist_url = (
-        "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
-    )
-    # output_path = "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/"  # dysk lokalny
-    output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu/"  # serwer ZPS
+    playlist_urls = [
+        "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt",
+        "https://youtube.com/playlist?list=PLUWDBVpNIE52-QW1DuVyQu-QWLCtIGgJX",
+    ]
+    # output_path = "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy"  # dysk lokalny
+    output_path = "/mnt/s01/praktyki/storage"  # serwer ZPS
+
+    # Sprawdzenie i utworzenie ścieżki, jeśli nie istnieje
+    os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
+    os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
+
     download_playlist_audio(
-        playlist_url, output_path, False
+        playlist_urls, output_path, True
     )  # argument boolean determinuje czy pobieramy czy tylko ekstrahujemy linki
     extracting_id()
     combining_all()
     print(combining_all())
-    download_transcription()
+    download_transcription(output_path)
