@@ -1,20 +1,16 @@
-# NOTE !
-# This script verifies prox with status codes and chooses functional one with good response dependent on timeout
-# Simply copy n paste list of prox to raw_prox_list.txt and run this script
-# It will verify the list and create output "valid_prox.txt" with good prox
-
-import threading
-import queue
-
 import requests
 
-with open("raw_prox_list.txt", "r") as item:
+prox_list = []
+
+with open(
+    "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/raw_prox_list.txt", "r"
+) as item:
     prox_list = item.read().split("\n")
 
 print(prox_list)
 
 
-def prox_validator():
+def adding_valid():
     valid = []
     for current_prox in prox_list:
         print(current_prox)
@@ -29,12 +25,16 @@ def prox_validator():
                 valid.append(current_prox)
         except:
             continue
-
-    with open(
-        "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/valid_prox.txt", "w"
-    ) as item:
-        for prox in valid:
-            item.write(str(prox) + "\n")
+    return valid
 
 
-prox_validator()
+valid = adding_valid()
+
+print(valid)
+
+with open(
+    "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/valid_prox.txt", "a"
+) as item:
+    for prox in valid:
+        item.write(prox + "\n")
+    print("Zapisano IP")
