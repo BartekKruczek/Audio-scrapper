@@ -35,9 +35,9 @@ Sprawozdanie z dnia 23.06.2023
 - naprawa zapisu plików do osobnych, stosownych folderów
 - próba implementacji zmiany IP w kodzie źródłowym
 - instalacja oraz implementacja openai whisper, przetestowanie mniejszego modelu na pojedynczym pliku audio
-- wstępne przetestowanie działania wyszukiwania playlist i podcastów na yt poprzez tagi i nazwisko twórcy na mniejszym zbiorze danych
+- przetestowanie działania wyszukiwania playlist i podcastów na yt poprzez tagi i nazwisko twórcy na mniejszym zbiorze danych
 
 Napotkane problemy:
-- jak sprawdzić czy na serwerze znajduję się już plik, który byśmy chcieli pobrać (wraz z tranksrypcją), oszczędność czasu i łącza
+- jak sprawdzić czy na serwerze znajduję się już plik, który byśmy chcieli pobrać (wraz z tranksrypcją) -> oszczędność czasu i łącza
 - jak zweryfikować, czy dane video/tranksrypcja są pobierane przez inne IP (w trakcie sprawdzania)
 - rotacja IP nie działa tak jakbym tego chciał ale widać światełko w tunelu
