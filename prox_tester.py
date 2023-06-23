@@ -30,7 +30,9 @@ def prox_validator():
         except:
             continue
 
-    with open("Python_scripts/valid_prox.txt", "w") as item:
+    with open(
+        "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/valid_prox.txt", "w"
+    ) as item:
         for prox in valid:
             item.write(str(prox) + "\n")
 
