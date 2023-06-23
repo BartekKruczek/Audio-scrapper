@@ -12,7 +12,7 @@ Napotkane problemy:
 - nieudolna próba zmiany IP podczas pobierania
 - zamiana transkrypcji na czytelny format, np. txt
 
-Sprawozdanie z dnia 21.06.2023
+Sprawozdanie z dnia 22.06.2023
 - obsługa wyjątków w kodzie źródłowym
 - automatyzacja wyciągania jak największej ilości informacji z filmiku
 - uhierarchizowanie pobierania
@@ -29,3 +29,7 @@ Cele:
 - implementacja zmiany IP
 - wyciągnięcie znaczników czasowych z transkrypcji
 - lepsze nazewnictwo plików w celu lepszej, przyszłościowej pracy
+
+Sprawozdanie z dnia 23.06.2023
+- naprawa pobierania transkrypcji z znacznikami czasowymi
+- naprawa zapisu plików do osobnych, stosownych podfolderów

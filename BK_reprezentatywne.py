@@ -5,6 +5,7 @@ import time
 import glob
 from youtubesearchpython import *
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import TranscriptsDisabled
 
 try:
     kompendium = {}
@@ -22,7 +23,9 @@ try:
                 }
             ],
             "outtmpl": os.path.join(
-                output_path, "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s"
+                output_path,
+                "Nagrania",
+                "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s",
             ),
             "ignoreerrors": True,
             "n_threads": 4,
@@ -68,25 +71,35 @@ try:
         # print(str(Ids))
 
     def download_transcription():
-        for key in kompendium.keys():
+        transcripts_folder = os.path.join(output_path, "Transkrypcja")
+        os.makedirs(transcripts_folder, exist_ok=True)
+
+        for video_id in kompendium.keys():
             try:
-                # print(key)  # debug
-                transcript_list = YouTubeTranscriptApi.list_transcripts(key)
+                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
                 transcript = transcript_list.find_manually_created_transcript(["pl"])
+
                 if transcript is not None:
-                    print(str(transcript))
-                    text = "\n".join([line["text"] for line in transcript])
+                    lines = []
+                    for line in transcript.fetch():
+                        text = line["text"]
+                        start = line["start"]
+                        duration = line["duration"]
+
+                        line_with_timestamp = f"[{duration}] [{start}] {text}"
+                        lines.append(line_with_timestamp)
+
+                    text_formatted = "\n".join(lines)
+
                     with open(
-                        os.path.join(output_path, "transcription.txt"),
-                        "a",
+                        os.path.join(transcripts_folder, f"{video_id}_transcript.txt"),
+                        "w",
                         encoding="utf-8",
-                    ) as file:
-                        file.write(text + "\n")
-                else:
-                    print("Brak dostępnej transkrypcji")
-                    continue
-            except Exception as e:
-                # print(str(e))
+                    ) as text_file:
+                        text_file.write(text_formatted)
+
+                    print(f"Transkrypcja dla video ID {video_id} została zapisana.")
+            except TranscriptsDisabled:
                 pass
 
     def combining_all():
@@ -100,10 +113,8 @@ finally:
     playlist_url = (
         "https://youtube.com/playlist?list=PLIM2IXHjLzGMA1NjX1-_mizbkiNhaydHt"
     )
-    output_path = (
-        "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy/Nagrania"  # dysk lokalny
-    )
-    # output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu/Nagrania"  # serwer ZPS
+    output_path = "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy"  # dysk lokalny
+    # output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu"  # serwer ZPS
     download_playlist_audio(
         playlist_url, output_path, False
     )  # argument boolean determinuje czy pobieramy czy tylko ekstrahujemy linki
