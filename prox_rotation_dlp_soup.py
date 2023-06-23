@@ -1,8 +1,15 @@
 # NOTE:
 # Before using this script - use prox_tester which validate for you prox list to restrict problems with connections
 # Keyboard interrupt with Ctrl+Z
+# Here I have used static list of UA, so it needs update once in a while
+# If you are intrested in lib generating approach, check header.py
+# There is one thing that can be added to simulate human-like behavior
+# In header section can be added - Referer - the URL of site "previously" visited by person
+# Additionaly there is Sec-Fetch section which can be useful with difficulty with SSL
 
 import requests
+import random
+import time
 import yt_dlp
 import requests
 import wget
@@ -15,7 +22,11 @@ try:
     with open("Python_scripts/valid_prox.txt", "r") as item:
         prox_list = item.read().split("\n")
 
-# Function for information extraction using beautifulsoup4 and prox
+    with open("Python_scripts/static_agents_list.txt", "r") as item:
+        agents_list = item.read().split("\n")
+
+
+    # Function for information extraction using beautifulsoup4 and prox
     def soup_extracting(url_request, prox_status, prox_listed):
         try:
             # Constructing parsed soup through requests [get().text return the components of page, simple get() returns code]
@@ -28,6 +39,10 @@ try:
             while finished is False:
                 try:
                     extracted_soup = BeautifulSoup(requests.get(url_request, timeout=15,
+                                                                headers={'User-Agent': random.choice(agents_list),
+                                                                         'Accept-Language': 'en, en-gb, pl',
+                                                                         'Accept-Encoding': 'br, gzip, deflate',
+                                                                         'Accept': 'text/html, audio/*, video/*, image/*'},
                                                                 proxies={
                                                                     "http": prox_listed[prox_status],
                                                                     "https": prox_listed[prox_status],
@@ -48,6 +63,7 @@ try:
             return extracted_soup, prox_status
         except KeyboardInterrupt:
             pass
+
 
     print(prox_list)
 
@@ -103,6 +119,11 @@ try:
                         "format": "m4a/bestaudio/best",
                         "socket_timeout": '20',
                         "proxy": str(prox_list[prox_iter]),
+                        "http_headers": {'User-Agent': random.choice(agents_list),
+                                         'Accept-Language': 'en, en-gb, pl',
+                                         'Accept-Encoding': 'br, gzip, deflate',
+                                         'Accept': 'text/html, audio/*, video/*, image/*'},
+                        "debug_printtraffic": True,
                         # ?? See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
                         "postprocessors": [
                             {  # Extract audio using ffmpeg
@@ -111,6 +132,15 @@ try:
                             }
                         ],
                     }
+
+                    # Above debug_printtraffic was used to check functionality of UA
+                    # It prints a lot of information, but if you want to check it out uncomment it
+
+                    # Wait time for requests
+                    sec = random.randint(0, 10)
+                    print("\nWaiting for " + str(sec) + " sec")
+                    time.sleep(sec)
+                    print("Proceeding\n")
 
                     # DLP Scraper init
                     dlp_scraper = yt_dlp.YoutubeDL(options)
@@ -141,7 +171,7 @@ try:
                 except:
                     print("\n" + "Negative prox res")
                     print(prox_list[prox_iter])
-                    print("Prox failed")
+                    print("Prox failed\n")
                     prox_iter += 1
                     if prox_iter == len(prox_list):
                         prox_iter = 0
