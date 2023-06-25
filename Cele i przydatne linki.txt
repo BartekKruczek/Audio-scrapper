@@ -1,9 +1,8 @@
 Cele:
-- naprawić transkrypcje
-- zmienić kod reprezentatywny by pobierał linki z playlisty, umieszczał je w osobnej liście a następnie w pętli je pobierać -> może przyspieszyć cały proces
+- naprawić nazewnictwo folerów, do których się pobierają pliki
+- dodać możliwość sprawdzenia czy plik który chcemy pobrac już nie jest pobrany
 - dodać możliwość wyszukiwania video do pobrania za pomocą tagów i godności twórcy
 - wrzucić wszysko do jednego pliku i zrobić porządek na GitHubie
-- wczytać się w bibliotekę selenium
 
 - https://pypi.org/project/youtube-search-python/
 - https://pypi.org/project/youtube-transcript-api/

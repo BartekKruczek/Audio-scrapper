@@ -1,3 +1,13 @@
+""" 
+README!
+
+How it works? In the variable 'kompendium' are the most important information tha you will need. It's organized as followed:
+
+kompendium = {video_id: (link_to_video, playlist_id)}
+
+In shorts, kompendium is dictionary with tuple inside as value representation. Link_to_video is direct link to video, playlist_id represent its' playlist id
+"""
+
 import yt_dlp
 import os
 import random
@@ -6,13 +16,56 @@ import glob
 from youtubesearchpython import *
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
+import subprocess
+import json
 
 try:
+    try:
+        print("Uruchamiam pierwszy skrypt {}".format(str("prox_tester")))
+        subprocess.call(["python", "prox_tester.py"])
+    except Exception as e:
+        print(str(e))
+    finally:
+        print("Uruchamiam drugi skrypt reprezentatywny")
+
     kompendium = {}
     URLS = []
     Ids = []
+    Titles = []
+    Playlists_id = []
 
-    def download_playlist_audio(playlist_urls, output_path, download):
+    def extracting_info(playlist_urls):
+        # wyciąganie linków z playlist
+        for playlist_url in playlist_urls:
+            playlistVideos = Playlist.getVideos(playlist_url)
+
+        # wyciągnie id playlist
+        for playlist_url in playlist_urls:
+            playlistInfo = Playlist.getInfo(playlist_url, mode=ResultMode.json)
+            playlist_data = json.loads(playlistInfo)
+            playlist_id = playlist_data["id"]
+            Playlists_id.append(str(playlist_id))
+        # print(Playlists_id)
+
+        # wyciąganie info z linków
+        for key in playlistVideos:
+            value = playlistVideos[key]
+
+        for video in value:
+            url = video["link"]
+            URLS.append(str(url))
+
+        for info in URLS:
+            videoInfo = Video.getInfo(info, mode=ResultMode.json)
+            value = videoInfo["id"]
+            Ids.append(value)
+
+        # łączenie ze sobą wszystkiego w jeden słownik
+        global kompendium
+        kompendium = dict(zip(Ids, zip(URLS, Playlists_id)))
+        print(kompendium)
+
+    def download_playlist_audio(output_path, download):
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -29,18 +82,7 @@ try:
                 "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s",
             ),
             "ignoreerrors": True,
-            "n_threads": 4,
         }
-
-        for playlist_url in playlist_urls:
-            playlistVideos = Playlist.getVideos(playlist_url)
-
-            for key in playlistVideos:
-                value = playlistVideos[key]
-
-            for video in value:
-                url = video["link"]
-                URLS.append(str(url))
 
         if download == True:
             if len(URLS) > 0:
@@ -62,16 +104,7 @@ try:
             else:
                 print("Brak URLS do pobrania")
         else:
-            # print(URLS)
             pass
-
-    def extracting_id():
-        for info in URLS:
-            videoInfo = Video.getInfo(info, mode=ResultMode.json)
-            # print(videoInfo)
-            value = videoInfo["id"]
-            Ids.append(value)
-        # print(str(Ids))
 
     def download_transcription(output_path):
         transcripts_folder = os.path.join(output_path, "Transkrypcja")
@@ -105,11 +138,6 @@ try:
             except TranscriptsDisabled:
                 pass
 
-    def combining_all():
-        global kompendium
-        kompendium = dict(zip(Ids, URLS))
-        return kompendium
-
 except Exception as e:
     print(str(e))
 finally:
@@ -124,8 +152,6 @@ finally:
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
-    download_playlist_audio(playlist_urls, output_path, False)
-    extracting_id()
-    combining_all()
-    print(combining_all())
+    extracting_info(playlist_urls)
+    download_playlist_audio(output_path, False)
     download_transcription(output_path)
