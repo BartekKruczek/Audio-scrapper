@@ -1,13 +1,3 @@
-""" 
-README!
-
-How it works? In the variable 'kompendium' are the most important information tha you will need. It's organized as followed:
-
-kompendium = {video_id: (link_to_video, playlist_id)}
-
-In shorts, kompendium is dictionary with tuple inside as value representation. Link_to_video is direct link to video, playlist_id represent its' playlist id
-"""
-
 import yt_dlp
 import os
 import random
@@ -20,37 +10,16 @@ import subprocess
 import json
 
 try:
-    # try:
-    #     print("Uruchamiam pierwszy skrypt: {}".format(str("prox_tester")))
-    #     subprocess.call(["python", "prox_tester.py"])
-    # except Exception as e:
-    #     print(str(e))
-    # finally:
-    #     print("Uruchamiam drugi skrypt: reprezentatywny")
-
     URLS = []
     Ids = []
     Titles = []
     Playlists_id = []
 
-    # def extracting_info(playlist_urls):
-    #     for playlist_url in playlist_urls:
-    #         playlistVideos = Playlist.getVideos(playlist_url)
-
-    #         # wyciągnie id playlist
-    #         playlistInfo = Playlist.getInfo(playlist_url, mode=ResultMode.json)
-    #         playlist_data = json.loads(playlistInfo)
-    #         playlist_id = playlist_data["id"]
-    #         Playlists_id.append(str(playlist_id))
-
-    #     for i in range(len(Ids)):
-    #         video_id = Ids[i]
-    #         url = URLS[i]
-    #         kompendium[video_id] = (url, Playlists_id[i])
-
     def extracting_info(playlist_urls):
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
+            playlist_info = Playlist.getInfo(playlist_url, mode=json)
+            print(playlist_info)
 
             for key in playlistVideos:
                 value = playlistVideos[key]
@@ -59,10 +28,10 @@ try:
                     URLS.append(video["link"])
                     Ids.append(video["id"])
 
-        # print(URLS)
-        # print(Ids)
+            playlist_id = playlist_info["id"]
+            Playlists_id.append(playlist_id)
 
-        # łączenie ze sobą wszystkiego w jeden słownik
+        print(Playlists_id)
         global kompendium
         kompendium = {}
         for i in range(len(Ids)):
@@ -70,7 +39,7 @@ try:
             url = URLS[i]
             kompendium[video_id] = url
 
-        # print("Test kompendium: " + str(kompendium))
+        # print(kompendium)
 
     def download_playlist_audio(output_path, download):
         ydl_opts = {
@@ -92,24 +61,13 @@ try:
         }
 
         if download == True:
-            if len(URLS) > 0:
-                for i in URLS:
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        if len(
-                            glob.glob(
-                                os.path.join(output_path, "Nagrania", "*", "*.wav")
-                            )
-                        ) != len(URLS):
-                            ydl.download(i)
-                            delay = random.uniform(5, 10)
-                            time.sleep(delay)
-                        else:
-                            break
-                        print("Pobrano wszystkie pliki")
-                        break
-                URLS.remove(i)
-            else:
-                print("Brak URLS do pobrania")
+            for playlist_url in playlist_urls:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([playlist_url])
+                    delay = random.uniform(5, 10)
+                    time.sleep(delay)
+
+            print("Pobrano wszystkie pliki")
         else:
             pass
 
@@ -153,12 +111,10 @@ finally:
         "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
     ]
     output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
-    # output_path = "/mnt/s01/praktyki/30-stopni-w-cieniu"  # serwer ZPS
 
-    # Sprawdzenie i utworzenie ścieżki, jeśli nie istnieje
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, True)
+    download_playlist_audio(output_path, False)
     download_transcription(output_path)
