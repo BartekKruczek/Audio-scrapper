@@ -3,6 +3,7 @@ import os
 import random
 import time
 import glob
+import time
 from youtubesearchpython import *
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
@@ -10,6 +11,14 @@ import subprocess
 import json
 
 try:
+    # try:
+    #     print("Uruchamiam pierwszy skrypt: {}".format(str("prox_tester")))
+    #     subprocess.call(["python", "prox_tester.py"])
+    # except Exception as e:
+    #     print(str(e))
+    # finally:
+    #     print("Uruchamiam drugi skrypt: reprezentatywny")
+
     kompendium = {}
 
     def extracting_info(playlist_urls):
@@ -44,22 +53,39 @@ try:
                 "Nagrania",
                 "Nagrania",
                 "%(playlist_id)s",
-                "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s",
+                "%(video_id)s",
             ),
             "ignoreerrors": True,
         }
 
         if download:
             for video_id, (url, playlist_id) in kompendium.items():
+                audio_path = os.path.join(
+                    output_path, "Nagrania", playlist_id, f"{video_id}.wav"
+                )
+                if os.path.exists(audio_path):
+                    print(
+                        f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                    )
+                    continue
+
+                print("Pobieram plik o ID:", video_id)
+                start_time = time.time()
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    if len(
-                        glob.glob(os.path.join(output_path, "Nagrania", "*", "*.wav"))
-                    ) != len(kompendium):
-                        ydl.download([url])
-                        delay = random.uniform(5, 10)
-                        time.sleep(delay)
-                    else:
-                        break
+                    ydl.download([url])
+                elapsed_time = time.time() - start_time
+                print(
+                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                        video_id, elapsed_time
+                    )
+                )
+                delay = random.uniform(5, 10)
+                print(
+                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                        delay
+                    )
+                )
+                time.sleep(delay)
 
             print("Pobrano wszystkie pliki")
         else:
@@ -70,6 +96,18 @@ try:
         os.makedirs(transcripts_folder, exist_ok=True)
 
         for video_id, (url, playlist_id) in kompendium.items():
+            playlist_folder = os.path.join(transcripts_folder, playlist_id)
+            os.makedirs(playlist_folder, exist_ok=True)
+
+            transcript_path = os.path.join(
+                playlist_folder, f"{video_id}_transcript.txt"
+            )
+            if os.path.exists(transcript_path):
+                print(
+                    f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                )
+                continue
+
             try:
                 transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
                 transcript = transcript_list.find_manually_created_transcript(["pl"])
@@ -86,11 +124,7 @@ try:
 
                     text_formatted = "\n".join(lines)
 
-                    with open(
-                        os.path.join(transcripts_folder, f"{video_id}_transcript.txt"),
-                        "w",
-                        encoding="utf-8",
-                    ) as text_file:
+                    with open(transcript_path, "w", encoding="utf-8") as text_file:
                         text_file.write(text_formatted)
 
                     print(f"Transkrypcja dla video ID {video_id} została zapisana.")

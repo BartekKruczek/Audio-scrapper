@@ -1,7 +1,5 @@
 Cele:
 - (zapytać się jak działa IP bo śmierdzi to gównem)
-- naprawić nazewnictwo folerów, do których się pobierają pliki
-- dodać możliwość sprawdzenia czy plik który chcemy pobrac już nie jest pobrany
 - dodać możliwość wyszukiwania video do pobrania za pomocą tagów i godności twórcy
 - wrzucić wszysko do jednego pliku i zrobić porządek na GitHubie
 
