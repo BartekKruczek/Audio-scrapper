@@ -42,7 +42,8 @@ try:
             "outtmpl": os.path.join(
                 output_path,
                 "Nagrania",
-                "%(playlist)s",
+                "Nagrania",
+                "%(playlist_id)s",
                 "%(title)s_%(upload_date)s_%(timestamp)s.%(ext)s",
             ),
             "ignoreerrors": True,
