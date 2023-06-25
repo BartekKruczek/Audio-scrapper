@@ -10,36 +10,24 @@ import subprocess
 import json
 
 try:
-    URLS = []
-    Ids = []
-    Titles = []
-    Playlists_id = []
+    kompendium = {}
 
     def extracting_info(playlist_urls):
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
             playlist_info = Playlist.getInfo(playlist_url, mode=json)
-            print(playlist_info)
+
+            playlist_id = playlist_info["id"]
 
             for key in playlistVideos:
                 value = playlistVideos[key]
 
                 for video in value:
-                    URLS.append(video["link"])
-                    Ids.append(video["id"])
+                    video_id = video["id"]
+                    url = video["link"]
+                    kompendium[video_id] = (url, playlist_id)
 
-            playlist_id = playlist_info["id"]
-            Playlists_id.append(playlist_id)
-
-        print(Playlists_id)
-        global kompendium
-        kompendium = {}
-        for i in range(len(Ids)):
-            video_id = Ids[i]
-            url = URLS[i]
-            kompendium[video_id] = url
-
-        # print(kompendium)
+        print(kompendium)
 
     def download_playlist_audio(output_path, download):
         ydl_opts = {
@@ -60,10 +48,10 @@ try:
             "ignoreerrors": True,
         }
 
-        if download == True:
-            for playlist_url in playlist_urls:
+        if download:
+            for video_id, (url, playlist_id) in kompendium.items():
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([playlist_url])
+                    ydl.download([url])
                     delay = random.uniform(5, 10)
                     time.sleep(delay)
 
@@ -75,7 +63,7 @@ try:
         transcripts_folder = os.path.join(output_path, "Transkrypcja")
         os.makedirs(transcripts_folder, exist_ok=True)
 
-        for video_id in kompendium.keys():
+        for video_id, (url, playlist_id) in kompendium.items():
             try:
                 transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
                 transcript = transcript_list.find_manually_created_transcript(["pl"])

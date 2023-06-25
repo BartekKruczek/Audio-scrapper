@@ -1,5 +1,4 @@
 Cele:
-- naprawić kompendium
 - (zapytać się jak działa IP bo śmierdzi to gównem)
 - naprawić nazewnictwo folerów, do których się pobierają pliki
 - dodać możliwość sprawdzenia czy plik który chcemy pobrac już nie jest pobrany

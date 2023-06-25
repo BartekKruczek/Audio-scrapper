@@ -33,24 +33,12 @@ try:
     Titles = []
     Playlists_id = []
 
-    # def extracting_info(playlist_urls):
-    #     for playlist_url in playlist_urls:
-    #         playlistVideos = Playlist.getVideos(playlist_url)
-
-    #         # wyciągnie id playlist
-    #         playlistInfo = Playlist.getInfo(playlist_url, mode=ResultMode.json)
-    #         playlist_data = json.loads(playlistInfo)
-    #         playlist_id = playlist_data["id"]
-    #         Playlists_id.append(str(playlist_id))
-
-    #     for i in range(len(Ids)):
-    #         video_id = Ids[i]
-    #         url = URLS[i]
-    #         kompendium[video_id] = (url, Playlists_id[i])
-
     def extracting_info(playlist_urls):
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
+            playlist_info = Playlist.getInfo(playlist_url, mode=json)
+
+            playlist_id = playlist_info["id"]
 
             for key in playlistVideos:
                 value = playlistVideos[key]
@@ -58,19 +46,17 @@ try:
                 for video in value:
                     URLS.append(video["link"])
                     Ids.append(video["id"])
+                    Playlists_id.append(playlist_id)
 
-        # print(URLS)
-        # print(Ids)
-
-        # łączenie ze sobą wszystkiego w jeden słownik
         global kompendium
         kompendium = {}
         for i in range(len(Ids)):
             video_id = Ids[i]
             url = URLS[i]
-            kompendium[video_id] = url
+            playlist_id = Playlists_id[i]
+            kompendium[video_id] = (url, playlist_id)
 
-        # print("Test kompendium: " + str(kompendium))
+        print(kompendium)
 
     def download_playlist_audio(output_path, download):
         ydl_opts = {
@@ -160,5 +146,5 @@ finally:
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, True)
+    download_playlist_audio(output_path, False)
     download_transcription(output_path)
