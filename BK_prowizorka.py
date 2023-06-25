@@ -1,13 +1,3 @@
-""" 
-README!
-
-How it works? In the variable 'kompendium' are the most important information tha you will need. It's organized as followed:
-
-kompendium = {video_id: (link_to_video, playlist_id)}
-
-In shorts, kompendium is dictionary with tuple inside as value representation. Link_to_video is direct link to video, playlist_id represent its' playlist id
-"""
-
 import yt_dlp
 import os
 import random
@@ -20,18 +10,7 @@ import subprocess
 import json
 
 try:
-    # try:
-    #     print("Uruchamiam pierwszy skrypt: {}".format(str("prox_tester")))
-    #     subprocess.call(["python", "prox_tester.py"])
-    # except Exception as e:
-    #     print(str(e))
-    # finally:
-    #     print("Uruchamiam drugi skrypt: reprezentatywny")
-
-    URLS = []
-    Ids = []
-    Titles = []
-    Playlists_id = []
+    kompendium = {}
 
     def extracting_info(playlist_urls):
         for playlist_url in playlist_urls:
@@ -44,17 +23,9 @@ try:
                 value = playlistVideos[key]
 
                 for video in value:
-                    URLS.append(video["link"])
-                    Ids.append(video["id"])
-                    Playlists_id.append(playlist_id)
-
-        global kompendium
-        kompendium = {}
-        for i in range(len(Ids)):
-            video_id = Ids[i]
-            url = URLS[i]
-            playlist_id = Playlists_id[i]
-            kompendium[video_id] = (url, playlist_id)
+                    video_id = video["id"]
+                    url = video["link"]
+                    kompendium[video_id] = (url, playlist_id)
 
         print(kompendium)
 
@@ -77,25 +48,19 @@ try:
             "ignoreerrors": True,
         }
 
-        if download == True:
-            if len(URLS) > 0:
-                for i in URLS:
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        if len(
-                            glob.glob(
-                                os.path.join(output_path, "Nagrania", "*", "*.wav")
-                            )
-                        ) != len(URLS):
-                            ydl.download(i)
-                            delay = random.uniform(5, 10)
-                            time.sleep(delay)
-                        else:
-                            break
-                        print("Pobrano wszystkie pliki")
+        if download:
+            for video_id, (url, playlist_id) in kompendium.items():
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    if len(
+                        glob.glob(os.path.join(output_path, "Nagrania", "*", "*.wav"))
+                    ) != len(kompendium):
+                        ydl.download([url])
+                        delay = random.uniform(5, 10)
+                        time.sleep(delay)
+                    else:
                         break
-                URLS.remove(i)
-            else:
-                print("Brak URLS do pobrania")
+
+            print("Pobrano wszystkie pliki")
         else:
             pass
 
@@ -103,7 +68,7 @@ try:
         transcripts_folder = os.path.join(output_path, "Transkrypcja")
         os.makedirs(transcripts_folder, exist_ok=True)
 
-        for video_id in kompendium.keys():
+        for video_id, (url, playlist_id) in kompendium.items():
             try:
                 transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
                 transcript = transcript_list.find_manually_created_transcript(["pl"])
@@ -139,9 +104,7 @@ finally:
         "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
     ]
     output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
-    # output_path = "/mnt/s01/praktyki/30-stopni-w-cieniu"  # serwer ZPS
 
-    # Sprawdzenie i utworzenie ścieżki, jeśli nie istnieje
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 

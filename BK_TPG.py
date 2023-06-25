@@ -51,9 +51,14 @@ try:
         if download:
             for video_id, (url, playlist_id) in kompendium.items():
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                    delay = random.uniform(5, 10)
-                    time.sleep(delay)
+                    if len(
+                        glob.glob(os.path.join(output_path, "Nagrania", "*", "*.wav"))
+                    ) != len(kompendium):
+                        ydl.download([url])
+                        delay = random.uniform(5, 10)
+                        time.sleep(delay)
+                    else:
+                        break
 
             print("Pobrano wszystkie pliki")
         else:
