@@ -6,8 +6,10 @@ import warnings
 try:
     model = whisper.load_model("base")
 
-    folder_path = "/mnt/s01/praktyki/storage/Nagrania"
-    output_path = "/mnt/s01/praktyki/storage"
+    # folder_path = "/mnt/s01/praktyki/storage/Nagrania"
+    # output_path = "/mnt/s01/praktyki/storage"
+    folder_path = "C:/Users/krucz/Documents/Praktyki/Nagrania"
+    output_path = "C:/Users/krucz/Documents/Praktyki"
     output_folder = os.path.join(output_path, "Transkrypcja_Whisper")
     os.makedirs(output_folder, exist_ok=True)
 

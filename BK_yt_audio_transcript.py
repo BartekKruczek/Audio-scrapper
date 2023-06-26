@@ -155,8 +155,8 @@ finally:
         "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
         "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
     ]
-    # output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
-    output_path = "/mnt/s01/praktyki/storage"  # dysk ZPS
+    output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
+    # output_path = "/mnt/s01/praktyki/storage"  # dysk ZPS
 
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
