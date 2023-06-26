@@ -2,10 +2,11 @@ import os
 import whisper
 import time
 
-model = whisper.load_model("tiny")
+model = whisper.load_model("base")
 
-folder_path = "C:/Users/krucz/Documents/Praktyki/Nagrania/7 metrów pod ziemią – SEZON 1 (2017-2020)"
-output_folder = os.path.join(folder_path, "Transcripts")
+folder_path = "/mnt/s01/praktyki/storage/Nagrania/"
+output_path = "/mnt/s01/praktyki/storage"
+output_folder = os.path.join(output_path, "Transcripts_Whisper")
 os.makedirs(output_folder, exist_ok=True)
 
 for filename in os.listdir(folder_path):
