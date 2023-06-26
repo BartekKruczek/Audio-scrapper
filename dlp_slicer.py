@@ -3,7 +3,16 @@ import subprocess
 import pydub
 import os
 import numpy as np
+import requests
+import time
+#import pycld2 as cld2
 
+import whisper
+
+from fake_useragent import UserAgent
+from stem import Signal
+from stem.control import Controller
+from pathlib import Path
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from pydub.utils import db_to_float
@@ -12,17 +21,38 @@ URL='https://www.youtube.com/watch?v=i-NVAhJXw44' # plik bez napisów
 #URL='https://www.youtube.com/watch?v=_SCSSLGZcSE' # plik posiadający napisy autora
 #URL='https://www.youtube.com/watch?v=S2Ww3rX-piw' # plik z tłem
 
-path=os.getcwd()
-print(path)
-def cleaning_wavs(path):
-    for fileName in os.listdir(path):
-        if fileName.endswith('.wav'):
-            os.remove(path + '\\' + fileName)
+path=os.getcwd()+"\\nagrania\\"
 
-cleaning_wavs(path)
+model = whisper.load_model("small",device='cuda')
+
+def cleaning_wavs(path):
+    for fileName in os.listdir(Path(path)):
+        if fileName.endswith('.wav') or fileName.endswith('.txt'):
+            os.remove(Path(path +"\\"+ fileName))
+
+def filename_ext(path):
+    for fileName in os.listdir(Path(path)):
+        if fileName.endswith('.wav'):
+            return fileName
+        
+        
+if os.path.isdir(path)==True:
+    cleaning_wavs(path)
+
 
 ydl_opts = {
     'format': 'wav/bestaudio/best',
+    'outtmpl': path+'\%(title)s.%(ext)s',
+    #'proxy': '139.144.24.46:8080',
+    #'proxy': '82.145.46.190:3128',
+    #'proxy': '20.219.111.119:8080',
+    #'proxy': '20.219.108.109:8080',
+    #'proxy': '95.217.167.241:8080',
+    #'proxy': '165.232.114.200:8080',
+    #'proxy': '95.56.254.139:3128',
+    #'proxy': '4.193.164.48:3128',
+    #'proxy': '47.88.29.108:8084',
+    #'socket_timeout': '20',
     'postprocessors': [{  
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'wav',
@@ -32,15 +62,34 @@ ydl_opts = {
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     error_code = ydl.download(URL)
 
-filename='Nowciax： Mam żal do Friza [i-NVAhJXw44]'
+filename=filename_ext(path)
 
-if os.path.isdir('splits_'+ filename)==False:
-    os.mkdir('splits_'+ filename)
+# print(requests.get('https://ident.me').text)
 
-sound_file = AudioSegment.from_wav(filename+'.wav')
+# proxies = {
+#     'http': 'socks5h://localhost:9150',
+#     'https': 'socks5h://localhost:9150'
+# }
+
+# headers = { 'User-Agent': UserAgent().random }
+# with Controller.from_port(port = 9051) as c:
+#             c.authenticate()
+#             c.signal(Signal.NEWNYM)
+#             print(f"Your IP is : {requests.get('https://ident.me', proxies=proxies, headers=headers).text}  ||  User Agent is : {headers['User-Agent']}")
+
+# with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+#     error_code = ydl.download(URL)
+
+if os.path.isdir(Path(path+'splits_'+ filename.strip('.wav')))==False:
+    os.mkdir(Path(path+'splits_'+filename.strip('.wav')))
+else :
+    cleaning_wavs(path+'splits_'+filename.strip('.wav')) 
+
+
+sound_file = AudioSegment.from_wav(Path(path+filename))
 sound_file = sound_file.split_to_mono()
 sound_file=sound_file[0]
-sound_file.export(filename+'.wav',format='wav')
+sound_file.export(Path(path+filename),format='wav')
 audio_chunks = split_on_silence(sound_file, 
 
     min_silence_len=200,
@@ -49,6 +98,24 @@ audio_chunks = split_on_silence(sound_file,
 )
 for i, chunk in enumerate(audio_chunks):
 
-    out_file = "./splits_"+ filename+"/split{0}.wav".format(i)
+    out_file = path+"./splits_"+ filename.strip('.wav')+"/split{0}.wav".format(i)
     print("exporting "+ out_file)
-    chunk.export(out_file, format="wav")
+    chunk.export(Path(out_file), format="wav")
+    audio=whisper.load_audio(Path(out_file))
+    audio=whisper.pad_or_trim(audio)
+    mel = whisper.log_mel_spectrogram(audio).to(model.device)
+    lang_dic=model.detect_language(mel)[1]
+    audio_lang_value=max(lang_dic.values())
+    audio_lang=list(lang_dic.keys())[list(lang_dic.values()).index(audio_lang_value)]
+    #print(audio_lang)
+    result = model.transcribe(audio)
+    #print(result["text"])
+    if audio_lang=='pl':
+        with open(Path(out_file.strip('.wav')+'.txt'), 'w') as f:
+            f.write(result["text"])
+            f.close()
+
+
+os.remove(Path(path + filename))   
+
+
