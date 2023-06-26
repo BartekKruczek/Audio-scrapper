@@ -34,6 +34,7 @@ try:
             ),
             "ignoreerrors": True,
             "n_threads": 4,
+            "encoding": "utf-8",
         }
 
         for playlist_url in playlist_urls:

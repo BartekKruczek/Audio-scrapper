@@ -30,7 +30,7 @@ Cele:
 - wyciągnięcie znaczników czasowych z transkrypcji
 - lepsze nazewnictwo plików w celu lepszej, przyszłościowej pracy
 
-Sprawozdanie z dnia 23.06.2023
+Sprawozdanie z dnia 23.06.2023 (8:00 - 16:00)
 - naprawa pobierania transkrypcji z znacznikami czasowymi i czasem trwania wypowiedzi
 - naprawa zapisu plików do osobnych, stosownych folderów
 - próba implementacji zmiany IP w kodzie źródłowym

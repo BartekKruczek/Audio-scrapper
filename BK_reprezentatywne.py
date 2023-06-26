@@ -27,13 +27,17 @@ try:
 
             playlist_id = playlist_info["id"]
 
+            kompendium[playlist_id] = {}  # utwórz słownik dla danego playlist_id
+
             for key in playlistVideos:
                 value = playlistVideos[key]
 
                 for video in value:
                     video_id = video["id"]
                     url = video["link"]
-                    kompendium[video_id] = (url, playlist_id)
+                    kompendium[playlist_id][
+                        video_id
+                    ] = url  # dodaj url do słownika dla danego video_id
 
         print(kompendium)
 
@@ -47,43 +51,43 @@ try:
                     "preferredquality": "192",
                 }
             ],
-            "outtmpl": os.path.join(
-                output_path,
-                "Nagrania",
-                "%(playlist_id)s",
-                "%(video_id)s",
-            ),
             "ignoreerrors": True,
         }
 
         if download:
-            for video_id, (url, playlist_id) in kompendium.items():
-                audio_path = os.path.join(
-                    output_path, "Nagrania", playlist_id, f"{video_id}.wav"
-                )
-                if os.path.exists(audio_path):
-                    print(
-                        f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
-                    )
-                    continue
+            for playlist_id, videos in kompendium.items():
+                playlist_folder = os.path.join(output_path, "Nagrania", playlist_id)
+                os.makedirs(playlist_folder, exist_ok=True)
 
-                print("Pobieram plik o ID:", video_id)
-                start_time = time.time()
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                elapsed_time = time.time() - start_time
-                print(
-                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
-                        video_id, elapsed_time
+                for video_id, url in videos.items():
+                    audio_path = os.path.join(playlist_folder, f"{video_id}.wav")
+                    if os.path.exists(audio_path):
+                        print(
+                            f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                        )
+                        continue
+
+                    print("Pobieram plik o ID:", video_id)
+                    start_time = time.time()
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        ydl.params["outtmpl"] = os.path.join(
+                            playlist_folder, f"{video_id}.%(ext)s"
+                        )
+
+                        ydl.download([url])
+                    elapsed_time = time.time() - start_time
+                    print(
+                        "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                            video_id, elapsed_time
+                        )
                     )
-                )
-                delay = random.uniform(5, 10)
-                print(
-                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
-                        delay
+                    delay = random.uniform(5, 10)
+                    print(
+                        "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                            delay
+                        )
                     )
-                )
-                time.sleep(delay)
+                    time.sleep(delay)
 
             print("Pobrano wszystkie pliki")
         else:

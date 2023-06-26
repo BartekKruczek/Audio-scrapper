@@ -51,7 +51,6 @@ try:
             "outtmpl": os.path.join(
                 output_path,
                 "Nagrania",
-                "Nagrania",
                 "%(playlist_id)s",
                 "%(video_id)s",
             ),
