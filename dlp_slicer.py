@@ -7,7 +7,7 @@ import requests
 import time
 #import pycld2 as cld2
 
-import whisper
+from faster_whisper import WhisperModel
 
 from fake_useragent import UserAgent
 from stem import Signal
@@ -23,7 +23,7 @@ URL='https://www.youtube.com/watch?v=i-NVAhJXw44' # plik bez napisów
 
 path=os.getcwd()+"\\nagrania\\"
 
-model = whisper.load_model("small",device='cuda')
+model = WhisperModel("medium",device='cpu', compute_type="int8")
 
 def cleaning_wavs(path):
     for fileName in os.listdir(Path(path)):
@@ -101,19 +101,22 @@ for i, chunk in enumerate(audio_chunks):
     out_file = path+"./splits_"+ filename.strip('.wav')+"/split{0}.wav".format(i)
     print("exporting "+ out_file)
     chunk.export(Path(out_file), format="wav")
-    audio=whisper.load_audio(Path(out_file))
-    audio=whisper.pad_or_trim(audio)
-    mel = whisper.log_mel_spectrogram(audio).to(model.device)
-    lang_dic=model.detect_language(mel)[1]
-    audio_lang_value=max(lang_dic.values())
-    audio_lang=list(lang_dic.keys())[list(lang_dic.values()).index(audio_lang_value)]
+    #audio=whisper.load_audio(Path(out_file))
+    #audio=whisper.pad_or_trim(audio)
+    #mel = whisper.log_mel_spectrogram(audio).to(model.device)
+    #lang_dic=model.detect_language(mel)[1]
+    #audio_lang_value=max(lang_dic.values())
+    #audio_lang=list(lang_dic.keys())[list(lang_dic.values()).index(audio_lang_value)]
     #print(audio_lang)
-    result = model.transcribe(audio)
-    #print(result["text"])
-    if audio_lang=='pl':
-        with open(Path(out_file.strip('.wav')+'.txt'), 'w') as f:
-            f.write(result["text"])
-            f.close()
+# results,info = model.transcribe(path+filename, beam_size=5)
+# for result in results:
+#     with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
+#              f.write(f"{result.start},{result.end},{result.text}\n")
+# f.close()
+    # if audio_lang=='pl':
+    #     with open(Path(out_file.strip('.wav')+'.txt'), 'w') as f:
+    #         f.write(result["text"])
+    #         f.close()
 
 
 os.remove(Path(path + filename))   
