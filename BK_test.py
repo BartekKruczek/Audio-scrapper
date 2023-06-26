@@ -44,8 +44,8 @@ try:
                     url = video["link"]
                     kompendium[video_id] = (url, playlist_id)
 
-        # print(kompendium)
-        # print(len(kompendium))
+        print(kompendium)
+        print(len(kompendium))
 
     def download_playlist_audio(output_path, download):
         audio_folder = os.path.join(output_path, "Nagrania")
@@ -60,11 +60,6 @@ try:
                     "preferredquality": "192",
                 }
             ],
-            "outtmpl": os.path.join(
-                audio_folder,
-                "%(playlist_id)s",
-                "%(id)s.%(ext)s",
-            ),
             "ignoreerrors": True,
             "n_threads": 4,
             "encoding": "utf-8",
