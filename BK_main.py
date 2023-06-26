@@ -11,6 +11,10 @@ try:
     kompendium = {}
     URLS = []
     Ids = []
+    Titles = []
+
+    def extracting_info():
+        pass
 
     def download_playlist_audio(playlist_urls, output_path, download):
         ydl_opts = {
@@ -114,17 +118,16 @@ except Exception as e:
     print(str(e))
 finally:
     playlist_urls = [
-        "https://youtube.com/playlist?list=PLJYMhYKidccNMcmNVIqpFLkmOAtKgIfu-",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq",
+        "https://youtube.com/playlist?list=PLUWDBVpNIE52-QW1DuVyQu-QWLCtIGgJX",
     ]
-    output_path = "C:/Users/krucz/Documents/GitHub/Anonimowi-Akustycy"  # dysk lokalny
+    output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
     # output_path = "/mnt/w01/praktyki/30-stopni-w-cieniu"  # serwer ZPS
 
     # Sprawdzenie i utworzenie ścieżki, jeśli nie istnieje
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
-    download_playlist_audio(playlist_urls, output_path, False)
+    download_playlist_audio(playlist_urls, output_path, True)
     extracting_id()
     combining_all()
     print(combining_all())

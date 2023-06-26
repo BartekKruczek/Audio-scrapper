@@ -63,7 +63,7 @@ try:
                 )
                 if os.path.exists(audio_path):
                     print(
-                        f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                        f"Plik audio dla video ID {video_id} juĹĽ istnieje. Pomijam pobieranie."
                     )
                     continue
 
@@ -79,7 +79,7 @@ try:
                 )
                 delay = random.uniform(5, 10)
                 print(
-                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                    "OpĂłĹşnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
                         delay
                     )
                 )
@@ -102,7 +102,7 @@ try:
             )
             if os.path.exists(transcript_path):
                 print(
-                    f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                    f"Transkrypcja dla video ID {video_id} juĹĽ istnieje. Pomijam pobieranie."
                 )
                 continue
 
@@ -125,7 +125,7 @@ try:
                     with open(transcript_path, "w", encoding="utf-8") as text_file:
                         text_file.write(text_formatted)
 
-                    print(f"Transkrypcja dla video ID {video_id} została zapisana.")
+                    print(f"Transkrypcja dla video ID {video_id} zostaĹ‚a zapisana.")
             except TranscriptsDisabled:
                 pass
 
@@ -133,8 +133,9 @@ except Exception as e:
     print(str(e))
 finally:
     playlist_urls = [
-        "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
+        "https://youtube.com/playlist?list=PLUWDBVpNIE52-QW1DuVyQu-QWLCtIGgJX",
+        "https://youtube.com/playlist?list=PLUWDBVpNIE51lQ96yID-oF-IKppUNrpay",
+        "https://youtube.com/playlist?list=PLUWDBVpNIE51d-kaYJyIOIE9fm7RNqI8C",
     ]
     output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
     # output_path = "/mnt/s01/praktyki/storage"  # dysk ZPS
