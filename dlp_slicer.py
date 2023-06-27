@@ -18,8 +18,8 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from pydub.utils import db_to_float
 
-#URL='https://www.youtube.com/watch?v=i-NVAhJXw44' # plik bez napisów
-URL='https://www.youtube.com/watch?v=_SCSSLGZcSE' # plik posiadający napisy autora
+URL='https://www.youtube.com/watch?v=i-NVAhJXw44' # plik bez napisów
+#URL='https://www.youtube.com/watch?v=_SCSSLGZcSE' # plik posiadający napisy autora
 #URL='https://www.youtube.com/watch?v=S2Ww3rX-piw' # plik z tłem
 
 path=os.getcwd()+"\\nagrania\\"
@@ -66,26 +66,26 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 
 filename=filename_ext(path)
 
-print(requests.get('https://ident.me').text)
+# print(requests.get('https://ident.me').text)
 
-proxies = {
-     'http': 'socks5h://localhost:9150',
-     'https': 'socks5h://localhost:9150'
-}
+# proxies = {
+#      'http': 'socks5h://localhost:9150',
+#      'https': 'socks5h://localhost:9150'
+# }
 
-headers = { 'User-Agent': UserAgent().random }
-with Controller.from_port(port = 9051) as c:
-            c.authenticate()
-            c.signal(Signal.NEWNYM)
-            print(f"Your IP is : {requests.get('https://ident.me', proxies=proxies, headers=headers).text}  ||  User Agent is : {headers['User-Agent']}")
+# headers = { 'User-Agent': UserAgent().random }
+# with Controller.from_port(port = 9051) as c:
+#             c.authenticate()
+#             c.signal(Signal.NEWNYM)
+#             print(f"Your IP is : {requests.get('https://ident.me', proxies=proxies, headers=headers).text}  ||  User Agent is : {headers['User-Agent']}")
 
-# with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-#     error_code = ydl.download(URL)
+# # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+# #     error_code = ydl.download(URL)
 
-if os.path.isdir(Path(path+'splits_'+ filename.strip('.wav')))==False:
-    os.mkdir(Path(path+'splits_'+filename.strip('.wav')))
-else :
-    cleaning_wavs(path+'splits_'+filename.strip('.wav')) 
+# if os.path.isdir(Path(path+'splits_'+ filename.strip('.wav')))==False:
+#     os.mkdir(Path(path+'splits_'+filename.strip('.wav')))
+# else :
+#     cleaning_wavs(path+'splits_'+filename.strip('.wav')) 
 
 
 sound_file = AudioSegment.from_wav(Path(path+filename))
@@ -98,11 +98,11 @@ audio_chunks = split_on_silence(sound_file,
 
     silence_thresh=40 * np.log10(abs(sound_file.rms)/32768)
 )
-for i, chunk in enumerate(audio_chunks):
+# for i, chunk in enumerate(audio_chunks):
 
-    out_file = path+"splits_"+ filename.strip('.wav')+"\split{0}.wav".format(i)
-    print("exporting "+ out_file)
-    chunk.export(Path(out_file), format="wav")
+#     out_file = path+"splits_"+ filename.strip('.wav')+"\split{0}.wav".format(i)
+#     print("exporting "+ out_file)
+#     chunk.export(Path(out_file), format="wav")
     #audio=whisper.load_audio(Path(out_file))
     #audio=whisper.pad_or_trim(audio)
     #mel = whisper.log_mel_spectrogram(audio).to(model.device)
@@ -121,7 +121,8 @@ audio_lang=list(lang_dic.keys())[list(lang_dic.values()).index(audio_lang_value)
 print(audio_lang)
 with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
     for segment in result['segments']:
-        f.write(f"{segment['start']}_{segment['end']}_{segment['text']}\n")
+        for word in segment['words']:
+            f.write(f"{word['start']}_{word['end']}_{word['word']}\n")
     f.close()
 # for result in results:
 #     with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
@@ -131,7 +132,6 @@ with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
     #     with open(Path(out_file.strip('.wav')+'.txt'), 'w') as f:
     #         f.write(result["text"])
     #         f.close()
-
 
 os.remove(Path(path + filename))   
 
