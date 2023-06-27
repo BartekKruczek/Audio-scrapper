@@ -103,44 +103,49 @@ try:
         else:
             pass
 
-    def download_transcription(output_path):
-        transcripts_folder = os.path.join(output_path, "Transkrypcja")
-        os.makedirs(transcripts_folder, exist_ok=True)
+    def download_transcription(output_path, download):
+        if download == True:
+            transcripts_folder = os.path.join(output_path, "Transkrypcja")
+            os.makedirs(transcripts_folder, exist_ok=True)
 
-        for video_id, (url, playlist_id) in kompendium.items():
-            playlist_folder = os.path.join(transcripts_folder, playlist_id)
-            os.makedirs(playlist_folder, exist_ok=True)
+            for video_id, (url, playlist_id) in kompendium.items():
+                playlist_folder = os.path.join(transcripts_folder, playlist_id)
+                os.makedirs(playlist_folder, exist_ok=True)
 
-            transcript_path = os.path.join(
-                playlist_folder, f"{video_id}_transcript.txt"
-            )
-            if os.path.exists(transcript_path):
-                print(
-                    f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                transcript_path = os.path.join(
+                    playlist_folder, f"{video_id}_transcript.txt"
                 )
-                continue
+                if os.path.exists(transcript_path):
+                    print(
+                        f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                    )
+                    continue
 
-            try:
-                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-                transcript = transcript_list.find_manually_created_transcript(["pl"])
+                try:
+                    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+                    transcript = transcript_list.find_manually_created_transcript(
+                        ["pl"]
+                    )
 
-                if transcript is not None:
-                    lines = []
-                    for line in transcript.fetch():
-                        text = line["text"]
-                        start = line["start"]
-                        duration = line["duration"]
+                    if transcript is not None:
+                        lines = []
+                        for line in transcript.fetch():
+                            text = line["text"]
+                            start = line["start"]
+                            duration = line["duration"]
 
-                        line_with_timestamp = f"[{duration}] [{start}] {text}"
-                        lines.append(line_with_timestamp)
+                            line_with_timestamp = f"[{duration}] [{start}] {text}"
+                            lines.append(line_with_timestamp)
 
-                    text_formatted = "\n".join(lines)
+                        text_formatted = "\n".join(lines)
 
-                    with open(transcript_path, "w", encoding="utf-8") as text_file:
-                        text_file.write(text_formatted)
+                        with open(transcript_path, "w", encoding="utf-8") as text_file:
+                            text_file.write(text_formatted)
 
-                    print(f"Transkrypcja dla video ID {video_id} została zapisana.")
-            except TranscriptsDisabled:
+                        print(f"Transkrypcja dla video ID {video_id} została zapisana.")
+                except TranscriptsDisabled:
+                    print("Brak transkrypcji do pobrania.")
+            else:
                 pass
 
 except Exception as e:
@@ -162,5 +167,5 @@ finally:
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, True)
-    download_transcription(output_path)
+    download_playlist_audio(output_path, False)
+    download_transcription(output_path, False)

@@ -31,6 +31,17 @@ try:
 
     kompendium = {}
 
+    proxy_file_path = "valid_prox.txt"  # Ścieżka do pliku tekstowego z proxy
+
+    proxies = []
+
+    with open(proxy_file_path, "r") as file:
+        for line in file:
+            line = line.strip()  # Usuń białe znaki z początku i końca linii
+            proxies.append(line)
+
+    print(proxies)
+
     def extracting_info(playlist_urls):
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
@@ -49,12 +60,7 @@ try:
         print(kompendium)
         print(len(kompendium))
 
-    IP_FILE_PATH = "valid_prox.txt"
-
     def download_playlist_audio(output_path, download):
-        with open(IP_FILE_PATH, "r") as ip_file:
-            ip_list = ip_file.read().splitlines()
-
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -73,6 +79,7 @@ try:
             "ignoreerrors": True,
             "n_threads": 4,
             "encoding": "utf-8",
+            "proxy": None,
         }
 
         if download:
@@ -86,33 +93,44 @@ try:
                     )
                     continue
 
-                print("Pobieram plik o ID:", video_id)
-                start_time = time.time()
+                for proxy in proxies:
+                    ydl_opts["proxy"] = proxy
 
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                elapsed_time = time.time() - start_time
-                print(
-                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
-                        video_id, elapsed_time
-                    )
-                )
-                delay = random.uniform(5, 10)
-                print(
-                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
-                        delay
-                    )
-                )
-                time.sleep(delay)
+                    print("Pobieram plik o ID:", video_id)
+                    start_time = time.time()
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        try:
+                            ydl.download([url])
+                            elapsed_time = time.time() - start_time
+                            print(
+                                "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                                    video_id, elapsed_time
+                                )
+                            )
+                            delay = random.uniform(5, 10)
+                            print(
+                                "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                                    delay
+                                )
+                            )
+                            print(
+                                "Pobieranie z wykorzystaniem proxy: {}".format(
+                                    str(proxy)
+                                )
+                            )
+                            time.sleep(delay)
+                            break
+                        except Exception as e:
+                            print(
+                                f"Wystąpił błąd podczas pobierania z proxy {proxy}: {str(e)}"
+                            )
+                            continue
 
             print("Pobrano wszystkie pliki")
         else:
             pass
 
     def download_transcription(output_path):
-        with open(IP_FILE_PATH, "r") as ip_file:
-            ip_list = ip_file.read().splitlines()
-
         transcripts_folder = os.path.join(output_path, "Transkrypcja")
         os.makedirs(transcripts_folder, exist_ok=True)
 
@@ -150,7 +168,7 @@ try:
 
                     print(f"Transkrypcja dla video ID {video_id} została zapisana.")
             except TranscriptsDisabled:
-                print("Brak dostępnej ręcznie dodanej transkrypcji dla pliku")
+                pass
 
 except Exception as e:
     print(str(e))
@@ -163,7 +181,6 @@ finally:
         "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq",
         "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
         "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
     ]
     output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
     # output_path = "/mnt/s01/praktyki/StorageYT"  # dysk ZPS
@@ -172,5 +189,5 @@ finally:
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, False)
+    download_playlist_audio(output_path, True)
     download_transcription(output_path)
