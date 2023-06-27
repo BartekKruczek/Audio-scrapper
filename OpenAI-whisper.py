@@ -25,7 +25,7 @@ try:
                 output_file = os.path.join(
                     output_subfolder, f"{os.path.splitext(filename)[0]}.txt"
                 )
-
+                print("Pobieram plik...")
                 start = time.time()
                 result = model.transcribe(file_path)
                 end = time.time()

@@ -7,6 +7,8 @@ kompendium = {video_id: (link_to_video, playlist_id)}
 
 In shorts, kompendium is dictionary with tuple inside as value representation. Link_to_video is direct link to video, playlist_id represent its' playlist id
 """
+
+
 import yt_dlp
 import os
 import random
@@ -44,13 +46,10 @@ try:
                     url = video["link"]
                     kompendium[video_id] = (url, playlist_id)
 
-        # print(kompendium)
-        # print(len(kompendium))
+        print(kompendium)
+        print(len(kompendium))
 
     def download_playlist_audio(output_path, download):
-        audio_folder = os.path.join(output_path, "Nagrania")
-        os.makedirs(audio_folder, exist_ok=True)
-
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -61,7 +60,8 @@ try:
                 }
             ],
             "outtmpl": os.path.join(
-                audio_folder,
+                output_path,
+                "Nagrania",
                 "%(playlist_id)s",
                 "%(id)s.%(ext)s",
             ),
@@ -72,10 +72,9 @@ try:
 
         if download:
             for video_id, (url, playlist_id) in kompendium.items():
-                audio_folder_next = os.path.join(audio_folder, playlist_id)
-                os.makedirs(audio_folder_next, exist_ok=True)
-
-                audio_path = os.path.join(audio_folder_next, f"{video_id}.wav")
+                audio_path = os.path.join(
+                    output_path, "Nagrania", playlist_id, f"{video_id}.wav"
+                )
                 if os.path.exists(audio_path):
                     print(
                         f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
@@ -143,7 +142,6 @@ try:
                     print(f"Transkrypcja dla video ID {video_id} została zapisana.")
             except TranscriptsDisabled:
                 pass
-        print("Skończyłem pobierać transkrypcję")
 
 except Exception as e:
     print(str(e))
@@ -157,11 +155,11 @@ finally:
         "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
     ]
     output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
-    # output_path = "/mnt/s01/praktyki/storage"  # dysk ZPS
+    # output_path = "/mnt/s01/praktyki/Storage_YT"  # dysk ZPS
 
     os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, True)
+    download_playlist_audio(output_path, False)
     download_transcription(output_path)

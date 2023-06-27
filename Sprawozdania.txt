@@ -55,3 +55,9 @@ Napotkane problemy:
 - problem z kodowaniem pobranych plików (UTF-8 na 99%) -> bądź problem z poprawnością ścieżki dostępu na serwerze (rozwiązanie w toku)
 - próba instalacji i przetestowania faster-whispera na serwerze jako zamiennika (niepowodzenie)
 - próba zautomatyzowania pobierania plików, ich transkrypcji oraz działania Whispera z poziomu jednego skryptu (częściowy sukces)
+
+Sprawozdanie z dnia 27.06.2023 (8:00 - 16:00)
+- naprawa nazewnictwa folderów (znaków szczególnych) aby whisper nie wyrzucał błędów
+
+Napotkane problemy:
+- uruchomienie whispera na serwerze
