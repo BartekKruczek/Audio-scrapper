@@ -60,6 +60,11 @@ try:
                     "preferredquality": "192",
                 }
             ],
+            "outtmpl": os.path.join(
+                audio_folder,
+                "%(playlist_id)s",
+                "%(id)s.%(ext)s",
+            ),
             "ignoreerrors": True,
             "n_threads": 4,
             "encoding": "utf-8",

@@ -41,3 +41,17 @@ Napotkane problemy:
 - jak sprawdzić czy na serwerze znajduję się już plik, który byśmy chcieli pobrać (wraz z tranksrypcją) -> oszczędność czasu i łącza
 - jak zweryfikować, czy dane video/tranksrypcja są pobierane przez inne IP (w trakcie sprawdzania)
 - rotacja IP nie działa tak jakbym tego chciał ale widać światełko w tunelu
+
+Sprawozdanie z dnia 26.06.2023 (8:00 - 17:30)
+- czystka i porządek na GitHubie
+- dalsza automatyzacja kodu na jeszcze większym zbiorze danych
+- obserwacja oraz analiza działania OpenAI Whispera oraz jego odpowiednika (faster-whisper), lokalnie na większym zbiorze danych
+- różnice w czasie oraz formie pobierania przez obydwa w/w modele (także różnice wynikające z wybrania różnych wielkościowo modeli), lokalnie
+- zapis transkrypcji uzyskanej przez Whispera do osobnych plików .txt, lokalnie
+- parcie na przód z dostępen do Atheny (Cyfronet)
+
+Napotkane problemy:
+- instalacja/reinstalacja/deinstalacja niezliczonej ilośći bibliotek w celu uruchomienia dwóch Whisperów (sukces, lokalnie)
+- problem z kodowaniem pobranych plików (UTF-8 na 99%) -> bądź problem z poprawnością ścieżki dostępu na serwerze (rozwiązanie w toku)
+- próba instalacji i przetestowania faster-whispera na serwerze jako zamiennika (niepowodzenie)
+- próba zautomatyzowania pobierania plików, ich transkrypcji oraz działania Whispera z poziomu jednego skryptu (częściowy sukces)
