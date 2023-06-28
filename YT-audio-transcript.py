@@ -17,6 +17,7 @@ import time
 from youtubesearchpython import *
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
+from youtubesearchpython import PlaylistsSearch
 import json
 
 try:
@@ -253,6 +254,19 @@ try:
         else:
             print("Understandable, have a great day!")
 
+    def search_youtube_playlists(query):
+        playlists_search = PlaylistsSearch(
+            query, limit=10, language="pl"
+        )  # Ograniczamy do 10 wyników
+        result = playlists_search.result()
+
+        for playlist in result["result"]:
+            title = playlist["title"]
+            link = playlist["link"]
+            print(f"Title: {title}")
+            print(f"Link: {link}")
+            print()
+
 except Exception as e:
     print(str(e))
 finally:
@@ -273,4 +287,6 @@ finally:
 
     extracting_info(playlist_urls)
     download_playlist_audio(output_path, False)
-    download_transcription(output_path, True)
+    download_transcription(output_path, False)
+    # Przykładowe zapytania
+    search_youtube_playlists("Podcasty")
