@@ -82,22 +82,23 @@ filename=filename_ext(path)
 # # with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 # #     error_code = ydl.download(URL)
 
-# if os.path.isdir(Path(path+'splits_'+ filename.strip('.wav')))==False:
-#     os.mkdir(Path(path+'splits_'+filename.strip('.wav')))
-# else :
-#     cleaning_wavs(path+'splits_'+filename.strip('.wav')) 
+if os.path.isdir(Path(path+'splits_'+ filename.strip('.wav')))==False:
+    os.mkdir(Path(path+'splits_'+filename.strip('.wav')))
+else :
+    cleaning_wavs(path+'splits_'+filename.strip('.wav')) 
 
 
 sound_file = AudioSegment.from_wav(Path(path+filename))
 sound_file = sound_file.split_to_mono()
 sound_file=sound_file[0]
 sound_file.export(Path(path+filename),format='wav')
-audio_chunks = split_on_silence(sound_file, 
+# audio_chunks = split_on_silence(sound_file, 
 
-    min_silence_len=200,
+#     min_silence_len=200,
 
-    silence_thresh=40 * np.log10(abs(sound_file.rms)/32768)
-)
+#     silence_thresh=40 * np.log10(abs(sound_file.rms)/32768)
+# )
+
 # for i, chunk in enumerate(audio_chunks):
 
 #     out_file = path+"splits_"+ filename.strip('.wav')+"\split{0}.wav".format(i)
@@ -119,11 +120,13 @@ lang_dic=model.detect_language(mel)[1]
 audio_lang_value=max(lang_dic.values())
 audio_lang=list(lang_dic.keys())[list(lang_dic.values()).index(audio_lang_value)]
 print(audio_lang)
-with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
-    for segment in result['segments']:
-        for word in segment['words']:
-            f.write(f"{word['start']}_{word['end']}_{word['word']}\n")
-    f.close()
+transcription_list=[]
+#with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
+for segment in result['segments']:
+    for word in segment['words']:
+        #f.write(f"{word['start']}_{word['end']}_{word['word']}\n")
+        transcription_list.append([word['start']*1000,word['end']*1000,word['word']])
+#    f.close()
 # for result in results:
 #     with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
 #              f.write(f"{result.start},{result.end},{result.text}\n")
@@ -132,7 +135,31 @@ with open(Path(path+filename.strip('.wav')+'.txt'), 'w') as f:
     #     with open(Path(out_file.strip('.wav')+'.txt'), 'w') as f:
     #         f.write(result["text"])
     #         f.close()
+print(transcription_list)
+splits_count=0
+start_idx=0
+while True:
+    out_file_wav = path+"splits_"+ filename.strip('.wav')+"\split{0}.wav".format(splits_count)
+    idx=0
+    transcription=''
+    while transcription_list[idx][1]<transcription_list[start_idx][0]+30000:
+        if idx>=start_idx:
+            transcription+=transcription_list[idx][2]
+        idx+=1
+        if idx==len(transcription_list)-1:
+            break
+    split=sound_file[transcription_list[start_idx][0]:transcription_list[idx][1]]
+    split.export(Path(out_file_wav), format="wav")
+    with open(Path(out_file_wav.strip('.wav')+'.txt'), 'w') as f:
+            f.write(transcription)
+            f.close()
+    start_idx=idx+1
+    splits_count+=1
+    if idx==len(transcription_list)-1:
+            break
 
-os.remove(Path(path + filename))   
+
+
+#os.remove(Path(path + filename))   
 
 
