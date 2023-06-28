@@ -72,6 +72,8 @@ Sprawozdanie z dnia 28.06.2023 (8:00 - 16:00)
 - dodanie możliwości ustawienia przepustowości pobierania
 - dodanie 'throttledratelimit', poniżej którego plik audio jest ponowie rozpakowywany
 - przeorganizowanie całego kodu źródłowego na schemat obiektowy
+- dodanie możliwości szukania podcastów za pomocą tagów
 
 Napotkane problemy:
 - ustalenie optymalnej zależności pomiędzy prędkością pobierania, a 'throttledratelimit'
+- weryfikacja na poziomie wyszukiwania podcastów, czy znalezione video posiada ręcznie dodaną transkrypcję oraz czy nie ma go w pobranej bazie na dysku lokalnym
