@@ -10,10 +10,10 @@ playlist_urls = [
     "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
     "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
 ]
-output_path = "C:/Users/krucz/Documents/Praktyki"
-proxy_path = "valid_prox.txt"
+output_path = "ścieżka_wyjściowa"
+proxy_path = "ścieżka_do_proxy_listy.txt"
 
 scrapper = YTScrapper()
 scrapper.extracting_info(output_path, playlist_urls, proxy_path)
 scrapper.download_playlist_audio(output_path, False)
-scrapper.download_transcription(output_path, True)
+scrapper.download_transcription(output_path, False)
