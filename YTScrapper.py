@@ -1,14 +1,3 @@
-"""
-README!
-
-How it works? In the variable 'kompendium' are the most important information tha you will need. It's organized as followed:
-
-kompendium = {video_id: (link_to_video, playlist_id)}
-
-In shorts, kompendium is dictionary with tuple inside as value representation. Link_to_video is direct link to video, playlist_id represent its' playlist id
-"""
-
-
 import yt_dlp
 import os
 import random
@@ -19,22 +8,25 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
 import json
 
-try:
 
-    def extracting_info(playlist_urls):
-        global kompendium
-        kompendium = {}
+class YTScrapper:
+    def __init__(self) -> None:
+        self.kompendium = {}
+        self.proxies = []
 
-        global proxies
-        proxies = []
+    def __repr__(self) -> str:
+        return "Class created to help scrapping YT playlists."
 
-        proxy_file_path = "valid_prox.txt"  # Ścieżka do pliku tekstowego z proxy
+    def extracting_info(self, output_path, playlist_urls, proxy_file_path):
+        os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
+        os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
+
         with open(proxy_file_path, "r") as file:
             for line in file:
                 line = (
                     line.strip()
                 )  # Usuwanie białych znaków z początku i końca linijki
-                proxies.append(line)
+                self.proxies.append(line)
 
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
@@ -48,9 +40,9 @@ try:
                 for video in value:
                     video_id = video["id"]
                     url = video["link"]
-                    kompendium[video_id] = (url, playlist_id)
+                    self.kompendium[video_id] = (url, playlist_id)
 
-    def download_playlist_audio(output_path, download):
+    def download_playlist_audio(self, output_path, download):
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -79,7 +71,7 @@ try:
         }
 
         if download:
-            for video_id, (url, playlist_id) in kompendium.items():
+            for video_id, (url, playlist_id) in self.kompendium.items():
                 audio_path = os.path.join(
                     output_path, "Nagrania", playlist_id, f"{video_id}.wav"
                 )
@@ -89,7 +81,7 @@ try:
                     )
                     continue
 
-                if len(proxies) == 0:
+                if len(self.proxies) == 0:
                     print("Pobieram plik o ID:", video_id)
                     start_time = time.time()
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -116,7 +108,7 @@ try:
                             )
                             continue
                 else:
-                    for proxy in proxies:
+                    for proxy in self.proxies:
                         ydl_opts["proxy"] = proxy
                         print("Pobieram plik o ID:", video_id)
                         print(
@@ -154,13 +146,13 @@ try:
         else:
             print("Understandable, have a great day!")
 
-    def download_transcription(output_path, download):
+    def download_transcription(self, output_path, download):
         if download:
             transcripts_folder = os.path.join(output_path, "Transkrypcja")
             os.makedirs(transcripts_folder, exist_ok=True)
 
-            if len(proxies) == 0:
-                for video_id, (url, playlist_id) in kompendium.items():
+            if len(self.proxies) == 0:
+                for video_id, (url, playlist_id) in self.kompendium.items():
                     playlist_folder = os.path.join(transcripts_folder, playlist_id)
                     os.makedirs(playlist_folder, exist_ok=True)
 
@@ -204,8 +196,8 @@ try:
                     except TranscriptsDisabled:
                         print("Brak dostępnej transkrypcji dla pliku.")
             else:
-                for proxy in proxies:
-                    for video_id, (url, playlist_id) in kompendium.items():
+                for proxy in self.proxies:
+                    for video_id, (url, playlist_id) in self.kompendium.items():
                         playlist_folder = os.path.join(transcripts_folder, playlist_id)
                         os.makedirs(playlist_folder, exist_ok=True)
 
@@ -252,25 +244,3 @@ try:
                             print("Brak dostępnej transkrypcji dla pliku.")
         else:
             print("Understandable, have a great day!")
-
-except Exception as e:
-    print(str(e))
-finally:
-    playlist_urls = [
-        "https://youtube.com/playlist?list=PLUWDBVpNIE52-QW1DuVyQu-QWLCtIGgJX",
-        "https://youtube.com/playlist?list=PLUWDBVpNIE51lQ96yID-oF-IKppUNrpay",
-        "https://youtube.com/playlist?list=PLUWDBVpNIE51d-kaYJyIOIE9fm7RNqI8C",
-        "https://youtube.com/playlist?list=PLTld5jYla5hbtbhnUNXCrD7p-w-wWI2xP",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdWnICiAzd6CUXCg2crQ18Yq",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
-        "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
-    ]
-    output_path = "C:/Users/krucz/Documents/Praktyki"  # dysk lokalny
-    # output_path = "/mnt/s01/praktyki/StorageYT"  # dysk ZPS
-
-    os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
-    os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
-
-    extracting_info(playlist_urls)
-    download_playlist_audio(output_path, False)
-    download_transcription(output_path, True)
