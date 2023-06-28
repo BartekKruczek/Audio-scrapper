@@ -17,21 +17,25 @@ import time
 from youtubesearchpython import *
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
-import subprocess
 import json
 
 try:
-    # try:
-    #     print("Uruchamiam pierwszy skrypt: {}".format(str("prox_tester")))
-    #     subprocess.call(["python", "prox_tester.py"])
-    # except Exception as e:
-    #     print(str(e))
-    # finally:
-    #     print("Uruchamiam drugi skrypt: reprezentatywny")
-
-    kompendium = {}
 
     def extracting_info(playlist_urls):
+        global kompendium
+        kompendium = {}
+
+        global proxies
+        proxies = []
+
+        proxy_file_path = "valid_prox.txt"  # Ścieżka do pliku tekstowego z proxy
+        with open(proxy_file_path, "r") as file:
+            for line in file:
+                line = (
+                    line.strip()
+                )  # Usuwanie białych znaków z początku i końca linijki
+                proxies.append(line)
+
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
             playlist_info = Playlist.getInfo(playlist_url, mode=json)
@@ -45,9 +49,6 @@ try:
                     video_id = video["id"]
                     url = video["link"]
                     kompendium[video_id] = (url, playlist_id)
-
-        print(kompendium)
-        print(len(kompendium))
 
     def download_playlist_audio(output_path, download):
         ydl_opts = {
@@ -68,6 +69,7 @@ try:
             "ignoreerrors": True,
             "n_threads": 4,
             "encoding": "utf-8",
+            "proxy": None,
         }
 
         if download:
@@ -81,72 +83,169 @@ try:
                     )
                     continue
 
-                print("Pobieram plik o ID:", video_id)
-                start_time = time.time()
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
-                elapsed_time = time.time() - start_time
-                print(
-                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
-                        video_id, elapsed_time
-                    )
-                )
-                delay = random.uniform(5, 10)
-                print(
-                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
-                        delay
-                    )
-                )
-                time.sleep(delay)
+                if len(proxies) == 0:
+                    print("Pobieram plik o ID:", video_id)
+                    start_time = time.time()
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        try:
+                            ydl.download([url])
+                            elapsed_time = time.time() - start_time
+                            print(
+                                "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                                    video_id, elapsed_time
+                                )
+                            )
+                            delay = random.uniform(5, 10)
+                            print(
+                                "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                                    delay
+                                )
+                            )
+
+                            time.sleep(delay)
+                            break
+                        except Exception as e:
+                            print(
+                                f"Wystąpił błąd podczas pobierania z proxy {proxy}: {str(e)}"
+                            )
+                            continue
+                else:
+                    for proxy in proxies:
+                        ydl_opts["proxy"] = proxy
+                        print("Pobieram plik o ID:", video_id)
+                        print(
+                            "Pobieranie z wykorzystaniem proxy: {}".format(
+                                str(ydl_opts["proxy"])
+                            )
+                        )
+                        start_time = time.time()
+
+                        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                            try:
+                                ydl.download([url])
+                                elapsed_time = time.time() - start_time
+                                print(
+                                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                                        video_id, elapsed_time
+                                    )
+                                )
+                                delay = random.uniform(5, 10)
+                                print(
+                                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                                        delay
+                                    )
+                                )
+
+                                time.sleep(delay)
+                                break
+                            except Exception as e:
+                                print(
+                                    f"Wystąpił błąd podczas pobierania z proxy {proxy}: {str(e)}"
+                                )
+                                continue
 
             print("Pobrano wszystkie pliki")
         else:
-            pass
+            print("Understandable, have a great day!")
 
     def download_transcription(output_path, download):
-        if download == True:
+        if download:
             transcripts_folder = os.path.join(output_path, "Transkrypcja")
             os.makedirs(transcripts_folder, exist_ok=True)
 
-            for video_id, (url, playlist_id) in kompendium.items():
-                playlist_folder = os.path.join(transcripts_folder, playlist_id)
-                os.makedirs(playlist_folder, exist_ok=True)
+            if len(proxies) == 0:
+                for video_id, (url, playlist_id) in kompendium.items():
+                    playlist_folder = os.path.join(transcripts_folder, playlist_id)
+                    os.makedirs(playlist_folder, exist_ok=True)
 
-                transcript_path = os.path.join(
-                    playlist_folder, f"{video_id}_transcript.txt"
-                )
-                if os.path.exists(transcript_path):
-                    print(
-                        f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                    transcript_path = os.path.join(
+                        playlist_folder, f"{video_id}_transcript.txt"
                     )
-                    continue
+                    if os.path.exists(transcript_path):
+                        print(
+                            f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                        )
+                        continue
 
-                try:
-                    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-                    transcript = transcript_list.find_manually_created_transcript(
-                        ["pl"]
-                    )
+                    try:
+                        transcript_list = YouTubeTranscriptApi.list_transcripts(
+                            video_id
+                        )
+                        transcript = transcript_list.find_manually_created_transcript(
+                            ["pl"]
+                        )
 
-                    if transcript is not None:
-                        lines = []
-                        for line in transcript.fetch():
-                            text = line["text"]
-                            start = line["start"]
-                            duration = line["duration"]
+                        if transcript is not None:
+                            lines = []
+                            for line in transcript.fetch():
+                                text = line["text"]
+                                start = line["start"]
+                                duration = line["duration"]
 
-                            line_with_timestamp = f"[{duration}] [{start}] {text}"
-                            lines.append(line_with_timestamp)
+                                line_with_timestamp = f"[{duration}] [{start}] {text}"
+                                lines.append(line_with_timestamp)
 
-                        text_formatted = "\n".join(lines)
+                            text_formatted = "\n".join(lines)
 
-                        with open(transcript_path, "w", encoding="utf-8") as text_file:
-                            text_file.write(text_formatted)
+                            with open(
+                                transcript_path, "w", encoding="utf-8"
+                            ) as text_file:
+                                text_file.write(text_formatted)
 
-                        print(f"Transkrypcja dla video ID {video_id} została zapisana.")
-                except TranscriptsDisabled:
-                    print("Brak transkrypcji do pobrania.")
+                            print(
+                                f"Transkrypcja dla video ID {video_id} została zapisana."
+                            )
+                    except TranscriptsDisabled:
+                        print("Brak dostępnej transkrypcji dla pliku.")
             else:
-                pass
+                for proxy in proxies:
+                    for video_id, (url, playlist_id) in kompendium.items():
+                        playlist_folder = os.path.join(transcripts_folder, playlist_id)
+                        os.makedirs(playlist_folder, exist_ok=True)
+
+                        transcript_path = os.path.join(
+                            playlist_folder, f"{video_id}_transcript.txt"
+                        )
+                        if os.path.exists(transcript_path):
+                            print(
+                                f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                            )
+                            continue
+
+                        try:
+                            transcript_list = YouTubeTranscriptApi.list_transcripts(
+                                video_id, proxies={"http": proxy, "https": proxy}
+                            )
+                            transcript = (
+                                transcript_list.find_manually_created_transcript(["pl"])
+                            )
+
+                            if transcript is not None:
+                                lines = []
+                                for line in transcript.fetch():
+                                    text = line["text"]
+                                    start = line["start"]
+                                    duration = line["duration"]
+
+                                    line_with_timestamp = (
+                                        f"[{duration}] [{start}] {text}"
+                                    )
+                                    lines.append(line_with_timestamp)
+
+                                text_formatted = "\n".join(lines)
+
+                                with open(
+                                    transcript_path, "w", encoding="utf-8"
+                                ) as text_file:
+                                    text_file.write(text_formatted)
+
+                                print(
+                                    f"Transkrypcja dla video ID {video_id} została zapisana."
+                                )
+                        except TranscriptsDisabled:
+                            print("Brak dostępnej transkrypcji dla pliku.")
+        else:
+            print("Understandable, have a great day!")
 
 except Exception as e:
     print(str(e))
@@ -167,5 +266,5 @@ finally:
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
-    download_playlist_audio(output_path, False)
-    download_transcription(output_path, False)
+    download_playlist_audio(output_path, True)
+    download_transcription(output_path, True)

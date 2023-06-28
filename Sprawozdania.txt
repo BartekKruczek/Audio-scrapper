@@ -1,4 +1,4 @@
-Sprawozdanie z dnia 21.06.2023
+Sprawozdanie z dnia 21.06.2023 (8:00 - 16:00)
 - dalsza optymalizacja i automatyzacja kodu
 - dodanie możliwości pobierania transkrypcji, czy to już gotowej czy automatycznie wygenerowanej
 - research możliwości oraz technik wyłuskania jak największej ilości informacji z danego filmiku na yt
@@ -12,7 +12,7 @@ Napotkane problemy:
 - nieudolna próba zmiany IP podczas pobierania
 - zamiana transkrypcji na czytelny format, np. txt
 
-Sprawozdanie z dnia 22.06.2023
+Sprawozdanie z dnia 22.06.2023 (8:00 - 16:00)
 - obsługa wyjątków w kodzie źródłowym
 - automatyzacja wyciągania jak największej ilości informacji z filmiku
 - uhierarchizowanie pobierania
@@ -58,6 +58,18 @@ Napotkane problemy:
 
 Sprawozdanie z dnia 27.06.2023 (8:00 - 16:00)
 - naprawa nazewnictwa folderów (znaków szczególnych) aby whisper nie wyrzucał błędów
+- próba implementacji throttlingu w kodzie źródłowym
+- zaznajomienie się z biblioteką proxy.py
+- zaznajomienie się z możliwościami implementacji thora do zmiany IP
+- przetestowanie biblioteki whisper-timestamped w celu uzyskania większej ilości informacji z pliku audio (odrzucone)
 
 Napotkane problemy:
-- uruchomienie whispera na serwerze
+- uruchomienie whispera na serwerze (rozwiązane)
+- próba wykorzystania gotowych bibliotek OpenAI do detekcji szemrów i instrumentów w nagraniu, a następne ich usunięcie (niepowodzenie, pochłania za dużo mocy obliczeniowej)
+
+Sprawozdanie z dnia 28.06.2023 (8:00 - 16:00)
+- dodanie funkcjonalności zmiany proxy podczas podbierania audio oraz transkrypcji wraz z obsługą wyjątków
+- 
+
+Napotkane problemy:
+- 
