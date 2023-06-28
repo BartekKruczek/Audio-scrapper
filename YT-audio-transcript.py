@@ -70,6 +70,8 @@ try:
             "n_threads": 4,
             "encoding": "utf-8",
             "proxy": None,
+            "ratelimit": 500000,
+            "throttledratelimit": 10000,
         }
 
         if download:

@@ -69,7 +69,8 @@ Napotkane problemy:
 
 Sprawozdanie z dnia 28.06.2023 (8:00 - 16:00)
 - dodanie funkcjonalności zmiany proxy podczas podbierania audio oraz transkrypcji wraz z obsługą wyjątków
-- 
+- dodanie możliwości ustawienia przepustowości pobierania
+- dodanie 'throttledratelimit', poniżej którego plik audio jest ponowie rozpakowywany
 
 Napotkane problemy:
-- 
+- ustalenie optymalnej zależności pomiędzy prędkością pobierania, a 'throttledratelimit'
