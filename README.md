@@ -1,6 +1,6 @@
 # Audio-scrapper
 
-Audio-scrapper is a tool that enables downloading a large amount of audio data from the internet while maintaining anonymity. Currently, it is based on two platforms: **Google Podcasts** and **YouTube**. The obtained files are used for further translation purposes and as training data for a neural model.
+Audio-scrapper is a tool that enables downloading a large amount of audio data from the internet while maintaining anonymity. Currently, it is based on two platforms: **Google Podcasts** and **YouTube**. Additionally, the source code allows for trimming the downloaded audio files to the desired length. Then, you can use tools like [Whisper](https://github.com/openai/whisper) for their translation.
 
 ## Setup
 
