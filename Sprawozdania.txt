@@ -78,3 +78,11 @@ Sprawozdanie z dnia 28.06.2023 (8:00 - 16:00)
 Napotkane problemy:
 - ustalenie optymalnej zależności pomiędzy prędkością pobierania, a 'throttledratelimit'
 - weryfikacja na poziomie wyszukiwania podcastów, czy znalezione video posiada ręcznie dodaną transkrypcję oraz czy nie ma go w pobranej bazie na dysku lokalnym
+
+Sprawozdanie z dnia 29.06.2023 (8:00 - 16:30)
+- implementacja, w głównym kodzie źródłowym, możliwości wyszukiwania playlist pod tagach/słowach kluczowych
+- dodanie możliwości sprawdzenia, czy wyszukany podcast posiada ręcznie dodaną transkrypcję w języku polskim -> może się przydać przy porównywaniu wyników z Whisperem
+- ciągła aktualizacja pliku README w repozytorium do wersji reprezentatywnej
+
+Napotkane problemy:
+- długi czas sprawdzania (głównie przez liczebność video wchodzących w jej skład) oraz wyszukiwania playlist
