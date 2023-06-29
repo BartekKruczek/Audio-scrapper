@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 ### YouTube scrapper
 
-The file [YTScrapper.py](YTScrapper.py) provides the ability to download audio from manually added playlists or automatically searched ones. The implementation of the code primarily relies on the libraries [youtube-search-python](https://pypi.org/project/youtube-search-python/) and [youtube-transcript-api](https://pypi.org/project/youtube-transcript-api/).
+The file [YTScrapper.py](YTScrapper.py) provides the ability to download audio from manually added playlists or automatically searched ones. The implementation of the code primarily relies on the libraries [youtube-search-python](https://pypi.org/project/youtube-search-python/) and [youtube-transcript-api](https://pypi.org/project/youtube-transcript-api/). The downloading is performed using the [yt-dlp](https://pypi.org/project/yt-dlp/) library.
 
 ### Google Podcasts scrapper
 
