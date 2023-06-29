@@ -86,3 +86,4 @@ Sprawozdanie z dnia 29.06.2023 (8:00 - 16:30)
 
 Napotkane problemy:
 - długi czas sprawdzania (głównie przez liczebność video wchodzących w jej skład) oraz wyszukiwania playlist
+- lekki problem z usystematyzowaniem pobierania potrzebnych bibliotek (rozwiązane)
