@@ -99,9 +99,9 @@ Every function contains at least 3 arguments. All of them are described in [Proc
 from ip_tester_2_0 import *
 from gp_operations import *
 
-cur_valid_path = "Python_scripts/valid_ip_list.txt"
-cur_raw_path = "Python_scripts/raw_ip_list.txt"
-cur_agents_path = "Python_scripts/static_agents_list.txt"
+cur_valid_path = "txt_storage/valid_ip_list.txt"
+cur_raw_path = "txt_storage/raw_ip_list.txt"
+cur_agents_path = "txt_storage/static_agents_list.txt"
 storage_path = "/storage_path/"
 overwrite = True
 
