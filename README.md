@@ -39,6 +39,36 @@ scrapper.download_transcription(output_path, True)
 
 The arguments in the ```playlist``` variable must be passed in the *string* format. The boolean argument in the ```scrapper.download_playlist_audio``` function of the scrapper determines whether the audio should be downloaded or only the information about it should be saved. The same applies to the ```scrapper.download_transcription```. By declaring the `output_path` variable, a folder is chosen where the corresponding subfolders, namely `Audio` and `Transcription`, will be created. Within each of these subfolders, further subfolders will be automatically created to represent each downloaded playlist.
 
+### Downloading itmes using [yt-dlp](https://github.com/yt-dlp/yt-dlp) library
+
+Below is an example code that demonstrates the usage of yt-dlp library for downloading videos from YouTube.
+
+```python
+    ydl_opts = {
+                "format": "audio_format",
+                "postprocessors": [
+                    {
+                        "key": "FFmpegExtractAudio",
+                        "preferredcodec": "wav",
+                        "preferredquality": "192",
+                    }
+                ],
+                "outtmpl": "uotput_path",
+                "ignoreerrors": bool,
+                "n_threads": int,
+                "encoding": str,
+                "proxy": None,
+                "sleep_interval_requests": 3,
+                "sleep_interval_subtitles": 2,
+                "ratelimit": 5000000000,
+                "throttledratelimit": 10,
+                "sleep_interval": 1,
+                "max_sleep_interval": 10,
+    }
+```
+
+This is just a demonstration example, and every user of this tool should modify it according to their needs. Some variables have intentionally been changed. You can find more options [here](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py).
+
 ### Example of calling [Process](Process.py) from [main.py](main.py) level
 
 ```python
