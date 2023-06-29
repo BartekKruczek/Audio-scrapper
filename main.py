@@ -27,10 +27,10 @@ processor.split_to_words_folder(output_path,whisper_model_size='base', preferred
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # gp_operator part
 
-cur_valid_path = "Python_scripts/valid_ip_list.txt"
-cur_raw_path = "Python_scripts/raw_ip_list.txt"
-cur_agents_path = "Python_scripts/static_agents_list.txt"
-storage_path = "/mnt/s01/praktyki/"
+cur_valid_path = "txt_storage/valid_ip_list.txt"
+cur_raw_path = "txt_storage/raw_ip_list.txt"
+cur_agents_path = "txt_storage/static_agents_list.txt"
+storage_path = "/storage_path/"
 overwrite = True
 
 validator = ip_validator(cur_valid_path, cur_raw_path, overwrite)
