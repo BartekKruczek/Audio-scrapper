@@ -4,3 +4,9 @@
 /.idea
 tester.wav
 yt-dlp
+raw_ip_list.txt
+raw_prox_list.txt
+static_agents_list.txt
+transcript/tester-lv2-cuda-faster
+valid_ip_list.txt
+valid_prox.txt
