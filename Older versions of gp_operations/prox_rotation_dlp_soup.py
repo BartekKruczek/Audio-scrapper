@@ -79,18 +79,20 @@ try:
     # Directory management for server storage
     os.chdir("/mnt/s01/praktyki/")
 
-    if os.path.exists("gp_storage_test"):
-        os.chdir("gp_storage_test")
+    if os.path.exists("gp_storage"):
+        os.chdir("gp_storage")
     else:
-        os.mkdir("gp_storage_test")
-        os.chdir("gp_storage_test")
+        os.mkdir("gp_storage")
+        os.chdir("gp_storage")
 
     # Here is the input for main URL
-    URL_setup = "https://podcasts.google.com/?hl=pl"
-    # URL_setup = "https://podcasts.google.com/search/polskie?hl=pl" # Polish search website
+    # URL_setup = "https://podcasts.google.com/?hl=pl"
+    URL_setup = "https://podcasts.google.com/search/polskie?hl=pl" # Polish search website
 
     # Extracting information using function
     prepared_soup, prox_iter = soup_extracting(URL_setup, prox_iter, prox_list)
+
+    print(prepared_soup)
 
     # Listing positions from main website
     meta_list = prepared_soup.find_all('a', {'class': 'c9x52d'})
@@ -103,87 +105,91 @@ try:
 
     # For each channel, extracting episodes links and data, making dirs for them and sorting
     for iteration, channels in enumerate(url_main_list):
-        current_url = channels
-        channel_soup, prox_iter = soup_extracting(current_url, prox_iter, prox_list)
+        try:
+            current_url = channels
+            channel_soup, prox_iter = soup_extracting(current_url, prox_iter, prox_list)
 
-        os.mkdir(channels_title_list[iteration])
-        os.chdir(channels_title_list[iteration])
+            print(channel_soup)
 
-        # For each download - there is init for dlp instance
-        for episodes in channel_soup.find_all('a', {'role': 'listitem'}):
-            finished = False
-            while finished is False:
-                try:
-                    # Options init for DLP
-                    options = {
-                        "format": "m4a/bestaudio/best",
-                        "socket_timeout": '20',
-                        "proxy": str(prox_list[prox_iter]),
-                        "http_headers": {'User-Agent': random.choice(agents_list),
-                                         'Accept-Language': 'en, en-gb, pl',
-                                         'Accept-Encoding': 'br, gzip, deflate',
-                                         'Accept': 'text/html, audio/*, video/*, image/*'},
-                        "debug_printtraffic": True,
-                        # ?? See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
-                        "postprocessors": [
-                            {  # Extract audio using ffmpeg
-                                "key": "FFmpegExtractAudio",
-                                "preferredcodec": "wav",
-                            }
-                        ],
-                    }
+            os.mkdir(channels_title_list[iteration])
+            os.chdir(channels_title_list[iteration])
 
-                    # Above debug_printtraffic was used to check functionality of UA
-                    # It prints a lot of information, but if you want to check it out uncomment it
+            # For each download - there is init for dlp instance
+            for episodes in channel_soup.find_all('a', {'role': 'listitem'}):
+                finished = False
+                while finished is False:
+                    try:
+                        # Options init for DLP
+                        options = {
+                            "format": "m4a/bestaudio/best",
+                            "socket_timeout": '20',
+                            "proxy": str(prox_list[prox_iter]),
+                            "http_headers": {'User-Agent': random.choice(agents_list),
+                                             'Accept-Language': 'en, en-gb, pl',
+                                             'Accept-Encoding': 'br, gzip, deflate',
+                                             'Accept': 'text/html, audio/*, video/*, image/*'},
+                            "debug_printtraffic": True,
+                            # ?? See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
+                            "postprocessors": [
+                                {  # Extract audio using ffmpeg
+                                    "key": "FFmpegExtractAudio",
+                                    "preferredcodec": "wav",
+                                }
+                            ],
+                        }
 
-                    # Wait time for requests
-                    sec = random.randint(0, 10)
-                    print("\nWaiting for " + str(sec) + " sec")
-                    time.sleep(sec)
-                    print("Proceeding\n")
+                        # Above debug_printtraffic was used to check functionality of UA
+                        # It prints a lot of information, but if you want to check it out uncomment it
 
-                    # DLP Scraper init
-                    dlp_scraper = yt_dlp.YoutubeDL(options)
+                        # Wait time for requests
+                        sec = random.randint(0, 10)
+                        print("\nWaiting for " + str(sec) + " sec")
+                        time.sleep(sec)
+                        print("Proceeding\n")
 
-                    # Title of creators show + subtitle of episodes - in case for further validation
-                    full_title = episodes.find('div', {'class': 'e3ZUqe'}).text
-                    title_list_all.append(full_title)
+                        # DLP Scraper init
+                        dlp_scraper = yt_dlp.YoutubeDL(options)
 
-                    # Also through div tags and classes if the first is not working
-                    # title = soup.find('div', {'class':'ZfMIwb'}).text
+                        # Title of creators show + subtitle of episodes - in case for further validation
+                        full_title = episodes.find('div', {'class': 'e3ZUqe'}).text
+                        title_list_all.append(full_title)
 
-                    # Extracting certain links to podcasts through find and JsName tags and splitting from the rest of data
-                    link = episodes.find('div', {'jsname': 'fvi9Ef'})['jsdata'].split(';')[1]
-                    link_list_all.append(link)
+                        # Also through div tags and classes if the first is not working
+                        # title = soup.find('div', {'class':'ZfMIwb'}).text
 
-                    # Upload time through class
-                    upload_time = episodes.find('div', {'class': 'OTz6ee'}).text
-                    time_list_all.append(upload_time)
+                        # Extracting certain links to podcasts through find and JsName tags and splitting from the rest of data
+                        link = episodes.find('div', {'jsname': 'fvi9Ef'})['jsdata'].split(';')[1]
+                        link_list_all.append(link)
 
-                    # Launching of scraper
-                    dlp_scraper.download(link)
-                    print("\n" + "Positive prox res")
-                    print(prox_list[prox_iter])
-                    print("Success:" + str(full_title) + "\n")
-                    finished = True
-                    del dlp_scraper
-                    del options
-                except:
-                    print("\n" + "Negative prox res")
-                    print(prox_list[prox_iter])
-                    print("Prox failed\n")
+                        # Upload time through class
+                        upload_time = episodes.find('div', {'class': 'OTz6ee'}).text
+                        time_list_all.append(upload_time)
+
+                        # Launching of scraper
+                        dlp_scraper.download(link)
+                        print("\n" + "Positive prox res")
+                        print(prox_list[prox_iter])
+                        print("Success:" + str(full_title) + "\n")
+                        finished = True
+                        del dlp_scraper
+                        del options
+                    except:
+                        print("\n" + "Negative prox res")
+                        print(prox_list[prox_iter])
+                        print("Prox failed\n")
+                        prox_iter += 1
+                        if prox_iter == len(prox_list):
+                            prox_iter = 0
+                        del dlp_scraper
+                        del options
+                        continue
                     prox_iter += 1
                     if prox_iter == len(prox_list):
                         prox_iter = 0
-                    del dlp_scraper
-                    del options
-                    continue
-                prox_iter += 1
-                if prox_iter == len(prox_list):
-                    prox_iter = 0
-
+        except FileExistsError:
+            continue
         # Returning to main
-        os.chdir("..")
+        os.chdir("../..")
 
 except KeyboardInterrupt:
     pass

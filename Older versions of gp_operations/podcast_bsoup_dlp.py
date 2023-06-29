@@ -87,4 +87,4 @@ for iteration, channels in enumerate(url_main_list):
         dlp_scraper.download(link)
 
     # Returning to main
-    os.chdir("..")
+    os.chdir("../..")
