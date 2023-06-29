@@ -87,7 +87,7 @@ Every function contains at least 3 arguments. All of them are described in [Proc
 
 ## More information
 
-The earliest version of the repository, dated June 29, 2023, was created by [JKChojnacki](https://github.com/JKChojnacki), [JacobeCode](https://github.com/JacobeCode) and [BartekKruczek](https://github.com/BartekKruczek) under the guidance of [stachu86](https://github.com/stachu86). Feel free to use this software. We wish you a great time :raised_hands:
+The earliest version of the repository, dated June 30, 2023, was created by [JKChojnacki](https://github.com/JKChojnacki), [JacobeCode](https://github.com/JacobeCode) and [BartekKruczek](https://github.com/BartekKruczek) under the guidance of [stachu86](https://github.com/stachu86). Feel free to use this software. We wish you a great time :raised_hands:
 
 ## License
 
