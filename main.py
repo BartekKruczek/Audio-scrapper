@@ -1,4 +1,3 @@
-# main, z którego uruchamiamy scrapowanie, nie ruszać bez jednomyślnej zgody
 from YTScrapper import *
 
 playlist_urls = [
@@ -10,8 +9,8 @@ playlist_urls = [
     "https://youtube.com/playlist?list=PL6-nym1-0TdULhklxX-97X28UXiKiUYop",
     "https://youtube.com/playlist?list=PL6-nym1-0TdUD0t7tbGEjs6lQcvuicoQH",
 ]
-output_path = "ścieżka_wyjściowa"
-proxy_path = "ścieżka_do_proxy_listy.txt"
+output_path = "your_path"
+proxy_path = "your_proxy_path.txt"
 
 scrapper = YTScrapper()
 scrapper.extracting_info(output_path, playlist_urls, proxy_path)
