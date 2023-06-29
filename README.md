@@ -39,7 +39,7 @@ scrapper.download_transcription(output_path, True)
 
 The arguments in the ```playlist``` variable must be passed in the *string* format. The boolean argument in the ```scrapper.download_playlist_audio``` function of the scrapper determines whether the audio should be downloaded or only the information about it should be saved. The same applies to the ```scrapper.download_transcription```. By declaring the `output_path` variable, a folder is chosen where the corresponding subfolders, namely `Audio` and `Transcription`, will be created. Within each of these subfolders, further subfolders will be automatically created to represent each downloaded playlist.
 
-### Downloading itmes using [yt-dlp](https://github.com/yt-dlp/yt-dlp) library
+### Downloading items using [yt-dlp](https://github.com/yt-dlp/yt-dlp) library
 
 Below is an example code that demonstrates the usage of yt-dlp library for downloading videos from YouTube.
 
