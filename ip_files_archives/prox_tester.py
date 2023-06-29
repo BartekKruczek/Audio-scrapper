@@ -22,7 +22,7 @@ def prox_validator():
             res = requests.get("https://ipinfo.io/json",
                                proxies={"http": current_prox,
                                         "https": current_prox},
-                               timeout=40)
+                               timeout=10)
             print(res.status_code)
             if res.status_code == 200:
                 valid.append(current_prox)
