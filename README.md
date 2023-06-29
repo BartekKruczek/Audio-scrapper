@@ -24,6 +24,8 @@ The file [YTScrapper.py](YTScrapper.py) provides the ability to download audio f
 
 ### Google Podcasts scrapper
 
+Repository contains two important main files [ip_tester_2_0.py](ip_tester_2_0.py) and [gp_operations.py](gp_operations.py).
+
 ## Python usage
 
 All scripts can be executed from the [main.py](main.py) level by creating appropriate class instances and then calling individual functions with desired arguments.
