@@ -44,27 +44,27 @@ The arguments in the ```playlist``` variable must be passed in the *string* form
 Below is an example code that demonstrates the usage of yt-dlp library for downloading videos from YouTube.
 
 ```python
-    ydl_opts = {
-                "format": "audio_format",
-                "postprocessors": [
-                    {
-                        "key": "FFmpegExtractAudio",
-                        "preferredcodec": "wav",
-                        "preferredquality": "192",
-                    }
-                ],
-                "outtmpl": "uotput_path",
-                "ignoreerrors": bool,
-                "n_threads": int,
-                "encoding": str,
-                "proxy": None,
-                "sleep_interval_requests": 3,
-                "sleep_interval_subtitles": 2,
-                "ratelimit": 5000000000,
-                "throttledratelimit": 10,
-                "sleep_interval": 1,
-                "max_sleep_interval": 10,
-    }
+ydl_opts = {
+            "format": "audio_format",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "wav",
+                    "preferredquality": "192",
+                }
+            ],
+            "outtmpl": "uotput_path",
+            "ignoreerrors": bool,
+            "n_threads": int,
+            "encoding": str,
+            "proxy": None,
+            "sleep_interval_requests": int,
+            "sleep_interval_subtitles": int,
+            "ratelimit": int,
+            "throttledratelimit": int,
+            "sleep_interval": int,
+            "max_sleep_interval": int,
+}
 ```
 
 This is just a demonstration example, and every user of this tool should modify it according to their needs. Some variables have intentionally been changed. You can find more options [here](https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py).
