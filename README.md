@@ -27,7 +27,7 @@ All scripts can be executed from the [main.py](main.py) level by creating approp
 ```python
 from YTScrapper import *
 
-playlist_urls = []
+playlist_urls = ['example_playlist_url']
 output_path = "your_output_path"
 proxy_path = "your_proxy_path.txt"
 
@@ -37,7 +37,7 @@ scrapper.download_playlist_audio(output_path, True)
 scrapper.download_transcription(output_path, True)
 ```
 
-The boolean argument in the ```scrapper.download_playlist_audio``` function of the scrapper determines whether the audio should be downloaded or only the information about it should be saved. The same applies to the ```scrapper.download_transcription```.
+The arguments in the ```playlist``` variable must be passed in the *string* format. The boolean argument in the ```scrapper.download_playlist_audio``` function of the scrapper determines whether the audio should be downloaded or only the information about it should be saved. The same applies to the ```scrapper.download_transcription```.
 
 ## More information
 
