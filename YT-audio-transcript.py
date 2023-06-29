@@ -255,46 +255,47 @@ try:
         else:
             print("Understandable, have a great day!")
 
-    def search_youtube_playlists(query):
-        playlists_search = PlaylistsSearch(
-            query, limit=50, language="pl"
-        )  # Ograniczamy do 10 wyników
-        result = playlists_search.result()
+    def search_youtube_playlists(*queries, limit=10):
+        for query in queries:
+            playlists_search = PlaylistsSearch(
+                query, limit=limit, language="pl"
+            )  # Ograniczamy do 10 wyników
+            result = playlists_search.result()
 
-        for playlist in result["result"]:
-            title = playlist["title"]
-            link = playlist["link"]
-            print(f"Title: {title}")
-            print(f"Link: {link}")
-            print()
+            for playlist in result["result"]:
+                title = playlist["title"]
+                link = playlist["link"]
+                print(f"Title: {title}")
+                print(f"Link: {link}")
+                print()
 
-            playlist_id = playlist["id"]
-            playlist_url = playlist["link"]
+                playlist_id = playlist["id"]
+                playlist_url = playlist["link"]
 
-            # Sprawdzanie filmów w playlistach
-            playlist_items = Playlist.getVideos(playlist_url, mode=json)
+                # Sprawdzanie filmów w playlistach
+                playlist_items = Playlist.getVideos(playlist_url, mode=json)
 
-            for key in playlist_items:
-                value = playlist_items[key]
+                for key in playlist_items:
+                    value = playlist_items[key]
 
-                for video in value:
-                    video_id = video["id"]
-                    url = video["link"]
+                    for video in value:
+                        video_id = video["id"]
+                        url = video["link"]
 
-                    # Sprawdzanie dostępności transkrypcji dla polskiego języka
-                    try:
-                        transcript_list = YouTubeTranscriptApi.list_transcripts(
-                            video_id
-                        )
-                        transcript = transcript_list.find_manually_created_transcript(
-                            ["pl"]
-                        )
+                        # Sprawdzanie dostępności transkrypcji dla polskiego języka
+                        try:
+                            transcript_list = YouTubeTranscriptApi.list_transcripts(
+                                video_id
+                            )
+                            transcript = (
+                                transcript_list.find_manually_created_transcript(["pl"])
+                            )
 
-                        if transcript is not None:
-                            # Dodawanie informacji do kompendium
-                            kompendium[video_id] = (url, playlist_id)
-                    except TranscriptsDisabled:
-                        pass
+                            if transcript is not None:
+                                # Dodawanie informacji do kompendium
+                                kompendium[video_id] = (url, playlist_id)
+                        except Exception:
+                            pass
 
 except Exception as e:
     print(str(e))
@@ -315,8 +316,8 @@ finally:
     os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
 
     extracting_info(playlist_urls)
+    search_youtube_playlists(
+        "podcasty", "historie", "nauka", "wywiady", "rozmowy", limit=50
+    )
     download_playlist_audio(output_path, False)
-    download_transcription(output_path, False)
-    # Przykładowe zapytania
-    search_youtube_playlists("Podcasty")
-    print(len(kompendium))
+    download_transcription(output_path, True)
