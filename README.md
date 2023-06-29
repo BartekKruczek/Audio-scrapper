@@ -93,7 +93,7 @@ processor.split_to_words_folder(output_path,whisper_model_size='base', preferred
 
 Every function contains at least 3 arguments. All of them are described in [Process](Process.py), in form of comments.
 
-### Example of calling [Process](Process.py) from [main.py](main.py) level
+### Example of calling [ip_tester](ip_tester_2_0.py) and [gp_operations](gp_operations.py) from [main.py](main.py) level
 
 ```python
 from ip_tester_2_0 import *
@@ -112,6 +112,7 @@ validator.ip_validate()
 gp_op.audio_extraction()
 
 ```
+Both classes contains functions described with comments in code, that gives details about parameters and usage. For more details check [ip_tester](ip_tester_2_0.py) and [gp_operations](gp_operations.py) or ```gp_operations``` branch.
 
 ## More information
 
