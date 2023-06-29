@@ -26,7 +26,7 @@ processor = Process()
 processor.transcribe_folder(output_path,whisper_model_size='base', preferred_device='cpu',language_detection=False)
 processor.split_to_words_folder(output_path,whisper_model_size='base', preferred_device='cpu')
 
-# ----
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # gp_operator part
 
 cur_valid_path = "Python_scripts/valid_ip_list.txt"
