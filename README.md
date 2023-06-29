@@ -24,7 +24,7 @@ The file [YTScrapper.py](YTScrapper.py) provides the ability to download audio f
 
 ### Google Podcasts scrapper
 
-Repository contains two important main files [ip_tester_2_0.py](ip_tester_2_0.py) and [gp_operations.py](gp_operations.py). The first one is responsible for checking provided IP adresses response via status codes and saving currently working to text file for further use.
+Repository contains two important main files [ip_tester_2_0.py](ip_tester_2_0.py) and [gp_operations.py](gp_operations.py). The first one is responsible for checking provided IP adresses response via status codes and saving currently working to text file for further use. [gp_operations.py](gp_operations.py) is the main file of this instance providing download functions with IP and headers managment. 
 
 ## Python usage
 
@@ -92,6 +92,27 @@ processor.split_to_words_folder(output_path,whisper_model_size='base', preferred
 ```Process``` class contains functions for transcribing and splitting (according to words timestamps) acquired audio files. For performing such actions, Whisper model is used.
 
 Every function contains at least 3 arguments. All of them are described in [Process](Process.py), in form of comments.
+
+### Example of calling [ip_tester](ip_tester_2_0.py) and [gp_operations](gp_operations.py) from [main.py](main.py) level
+
+```python
+from ip_tester_2_0 import *
+from gp_operations import *
+
+cur_valid_path = "Python_scripts/valid_ip_list.txt"
+cur_raw_path = "Python_scripts/raw_ip_list.txt"
+cur_agents_path = "Python_scripts/static_agents_list.txt"
+storage_path = "/storage_path/"
+overwrite = True
+
+validator = ip_validator(cur_valid_path, cur_raw_path, overwrite)
+gp_op = gp_operator(cur_valid_path, cur_agents_path, storage_path, True, True)
+
+validator.ip_validate()
+gp_op.audio_extraction()
+
+```
+Both classes contains functions described with comments in code, that gives details about parameters and usage. For more details check [ip_tester](ip_tester_2_0.py) and [gp_operations](gp_operations.py) or ```gp_operations``` branch.
 
 ## More information
 
