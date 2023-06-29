@@ -93,6 +93,26 @@ processor.split_to_words_folder(output_path,whisper_model_size='base', preferred
 
 Every function contains at least 3 arguments. All of them are described in [Process](Process.py), in form of comments.
 
+### Example of calling [Process](Process.py) from [main.py](main.py) level
+
+```python
+from ip_tester_2_0 import *
+from gp_operations import *
+
+cur_valid_path = "Python_scripts/valid_ip_list.txt"
+cur_raw_path = "Python_scripts/raw_ip_list.txt"
+cur_agents_path = "Python_scripts/static_agents_list.txt"
+storage_path = "/storage_path/"
+overwrite = True
+
+validator = ip_validator(cur_valid_path, cur_raw_path, overwrite)
+gp_op = gp_operator(cur_valid_path, cur_agents_path, storage_path, True, True)
+
+validator.ip_validate()
+gp_op.audio_extraction()
+
+```
+
 ## More information
 
 The earliest version of the repository, dated June 30, 2023, was created by [JKChojnacki](https://github.com/JKChojnacki), [JacobeCode](https://github.com/JacobeCode) and [BartekKruczek](https://github.com/BartekKruczek) under the guidance of [stachu86](https://github.com/stachu86). Feel free to use this software. We wish you a great time :raised_hands:
