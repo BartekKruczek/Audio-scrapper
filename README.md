@@ -24,7 +24,7 @@ The file [YTScrapper.py](YTScrapper.py) provides the ability to download audio f
 
 ### Google Podcasts scrapper
 
-Repository contains two important main files [ip_tester_2_0.py](ip_tester_2_0.py) and [gp_operations.py](gp_operations.py).
+Repository contains two important main files [ip_tester_2_0.py](ip_tester_2_0.py) and [gp_operations.py](gp_operations.py). The first one is responsible for checking provided IP adresses response via status codes and saving currently working to text file for further use.
 
 ## Python usage
 
