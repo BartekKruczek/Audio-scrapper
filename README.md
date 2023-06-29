@@ -1,6 +1,6 @@
 # Audio-scrapper
 
-Audio-scrapper is a tool that enables downloading a large amount of audio data from the internet while maintaining anonymity. Currently, it is based on two platforms: **Google Podcasts** and **YouTube**. The obtained files are used for further translation purposes and as training data for a neural model. The earliest version of the repository, dated June 29, 2023, was created by [JKChojnacki](https://github.com/JKChojnacki), [JacobeCode](https://github.com/JacobeCode) and [BartekKruczek](https://github.com/BartekKruczek)
+Audio-scrapper is a tool that enables downloading a large amount of audio data from the internet while maintaining anonymity. Currently, it is based on two platforms: **Google Podcasts** and **YouTube**. The obtained files are used for further translation purposes and as training data for a neural model. The earliest version of the repository, dated June 29, 2023, was created by [JKChojnacki](https://github.com/JKChojnacki), [JacobeCode](https://github.com/JacobeCode) and [BartekKruczek](https://github.com/BartekKruczek).
 
 ## Setup
 
@@ -41,4 +41,8 @@ The boolean argument in the ```scrapper.download_playlist_audio``` function of t
 
 ## More information
 
-Feel free to use this software. We wish you a great time!
+Feel free to use this software. We wish you a great time :raised_hands:
+
+## License
+
+The repository operates under the [MIT](LICENSE) license.
