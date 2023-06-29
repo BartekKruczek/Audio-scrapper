@@ -1,4 +1,5 @@
 from YTScrapper import *
+from Process import *
 
 playlist_urls = [
     "https://youtube.com/playlist?list=PLUWDBVpNIE52-QW1DuVyQu-QWLCtIGgJX",
@@ -16,3 +17,7 @@ scrapper = YTScrapper()
 scrapper.extracting_info(output_path, playlist_urls, proxy_path)
 scrapper.download_playlist_audio(output_path, False)
 scrapper.download_transcription(output_path, False)
+
+processor = Process()
+processor.transcribe_folder(output_path,whisper_model_size='base', preferred_device='cpu',language_detection=False)
+processor.split_to_words_folder(output_path,whisper_model_size='base', preferred_device='cpu')

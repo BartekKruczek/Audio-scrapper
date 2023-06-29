@@ -39,6 +39,22 @@ scrapper.download_transcription(output_path, True)
 
 The boolean argument in the ```scrapper.download_playlist_audio``` function of the scrapper determines whether the audio should be downloaded or only the information about it should be saved. The same applies to the ```scrapper.download_transcription```.
 
+### Example of calling [Process](Process.py) from [main.py](main.py) level
+
+```python
+from Process import *
+
+output_path = "scraper_output_path" 
+
+processor = Process()
+processor.transcribe_folder(output_path,whisper_model_size='base', preferred_device='cpu',language_detection=False)
+processor.split_to_words_folder(output_path,whisper_model_size='base', preferred_device='cpu')
+```
+
+```Process``` class contains functions for transcribing and splitting (according to words timestamps) acquired audio files. For performing such actions, Whisper model is used.
+
+Every function contains at least 3 arguments. All of them are described in [Process](Process.py), in form of comments.
+
 ## More information
 
 Feel free to use this software. We wish you a great time!
