@@ -50,6 +50,7 @@ try:
                     video_id = video["id"]
                     url = video["link"]
                     kompendium[video_id] = (url, playlist_id)
+        print(len(kompendium))
 
     def download_playlist_audio(output_path, download):
         ydl_opts = {
@@ -256,7 +257,7 @@ try:
 
     def search_youtube_playlists(query):
         playlists_search = PlaylistsSearch(
-            query, limit=10, language="pl"
+            query, limit=50, language="pl"
         )  # Ograniczamy do 10 wyników
         result = playlists_search.result()
 
@@ -266,6 +267,34 @@ try:
             print(f"Title: {title}")
             print(f"Link: {link}")
             print()
+
+            playlist_id = playlist["id"]
+            playlist_url = playlist["link"]
+
+            # Sprawdzanie filmów w playlistach
+            playlist_items = Playlist.getVideos(playlist_url, mode=json)
+
+            for key in playlist_items:
+                value = playlist_items[key]
+
+                for video in value:
+                    video_id = video["id"]
+                    url = video["link"]
+
+                    # Sprawdzanie dostępności transkrypcji dla polskiego języka
+                    try:
+                        transcript_list = YouTubeTranscriptApi.list_transcripts(
+                            video_id
+                        )
+                        transcript = transcript_list.find_manually_created_transcript(
+                            ["pl"]
+                        )
+
+                        if transcript is not None:
+                            # Dodawanie informacji do kompendium
+                            kompendium[video_id] = (url, playlist_id)
+                    except TranscriptsDisabled:
+                        pass
 
 except Exception as e:
     print(str(e))
@@ -290,3 +319,4 @@ finally:
     download_transcription(output_path, False)
     # Przykładowe zapytania
     search_youtube_playlists("Podcasty")
+    print(len(kompendium))
