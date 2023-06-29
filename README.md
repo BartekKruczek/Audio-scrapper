@@ -4,6 +4,12 @@ Audio-scrapper is a tool that enables downloading a large amount of audio data f
 
 ## Setup
 
+The following command will clone repsitory.
+
+```text
+git clone https://github.com/BartekKruczek/Audio-scrapper.git
+```
+
 The entire source code has been written in Python. All the necessary libraries can be installed from the *requirements.txt* file.
 
 ```text
