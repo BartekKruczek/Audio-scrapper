@@ -11,23 +11,22 @@ import json
 
 class YTScrapper:
     def __init__(self) -> None:
-        self.kompendium = {}
+        self.all_in_one = {}
         self.proxies = []
 
     def __repr__(self) -> str:
-        return "Class created to help scrapping YT playlists."
+        return "Class created to help scrapping YT playlists and more."
 
     def extracting_info(self, output_path, playlist_urls, proxy_file_path):
-        os.makedirs(os.path.join(output_path, "Nagrania"), exist_ok=True)
-        os.makedirs(os.path.join(output_path, "Transkrypcja"), exist_ok=True)
+        os.makedirs(os.path.join(output_path, "Audio"), exist_ok=True)
+        os.makedirs(os.path.join(output_path, "Transcription"), exist_ok=True)
 
         with open(proxy_file_path, "r") as file:
             for line in file:
-                line = (
-                    line.strip()
-                )  # Usuwanie białych znaków z początku i końca linijki
+                line = line.strip()
                 self.proxies.append(line)
 
+        # extracting info.
         for playlist_url in playlist_urls:
             playlistVideos = Playlist.getVideos(playlist_url, mode=json)
             playlist_info = Playlist.getInfo(playlist_url, mode=json)
@@ -40,7 +39,7 @@ class YTScrapper:
                 for video in value:
                     video_id = video["id"]
                     url = video["link"]
-                    self.kompendium[video_id] = (url, playlist_id)
+                    self.all_in_one[video_id] = (url, playlist_id)
 
     def download_playlist_audio(self, output_path, download):
         ydl_opts = {
@@ -54,7 +53,7 @@ class YTScrapper:
             ],
             "outtmpl": os.path.join(
                 output_path,
-                "Nagrania",
+                "Audio",
                 "%(playlist_id)s",
                 "%(id)s.%(ext)s",
             ),
@@ -71,31 +70,31 @@ class YTScrapper:
         }
 
         if download:
-            for video_id, (url, playlist_id) in self.kompendium.items():
+            for video_id, (url, playlist_id) in self.all_in_one():
+                # checking if audio is already downloaded
                 audio_path = os.path.join(
-                    output_path, "Nagrania", playlist_id, f"{video_id}.wav"
+                    output_path, "Audio", playlist_id, f"{video_id}.wav"
                 )
                 if os.path.exists(audio_path):
-                    print(
-                        f"Plik audio dla video ID {video_id} już istnieje. Pomijam pobieranie."
-                    )
+                    print(f"Video ID {video_id} exists, skipping.")
                     continue
 
+                # if non proxy is valid
                 if len(self.proxies) == 0:
-                    print("Pobieram plik o ID:", video_id)
+                    print("Downloading audio ID:", video_id)
                     start_time = time.time()
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         try:
                             ydl.download([url])
                             elapsed_time = time.time() - start_time
                             print(
-                                "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                                "Estimated time {}: {:.2f} seconds".format(
                                     video_id, elapsed_time
                                 )
                             )
                             delay = random.uniform(5, 10)
                             print(
-                                "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                                "Delay before next download: {:.2f} seconds".format(
                                     delay
                                 )
                             )
@@ -103,18 +102,14 @@ class YTScrapper:
                             time.sleep(delay)
                             break
                         except Exception as e:
-                            print(
-                                f"Wystąpił błąd podczas pobierania z proxy {proxy}: {str(e)}"
-                            )
+                            print(f"An error occurred {proxy}: {str(e)}")
                             continue
                 else:
                     for proxy in self.proxies:
                         ydl_opts["proxy"] = proxy
-                        print("Pobieram plik o ID:", video_id)
+                        print("Downloading audio ID:", video_id)
                         print(
-                            "Pobieranie z wykorzystaniem proxy: {}".format(
-                                str(ydl_opts["proxy"])
-                            )
+                            "Downloading using proxy: {}".format(str(ydl_opts["proxy"]))
                         )
                         start_time = time.time()
 
@@ -123,13 +118,13 @@ class YTScrapper:
                                 ydl.download([url])
                                 elapsed_time = time.time() - start_time
                                 print(
-                                    "Czas oczekiwania dla pliku o ID {}: {:.2f} sekundy".format(
+                                    "Estimated time {}: {:.2f} seconds".format(
                                         video_id, elapsed_time
                                     )
                                 )
                                 delay = random.uniform(5, 10)
                                 print(
-                                    "Opóźnienie przed pobraniem kolejnego pliku: {:.2f} sekundy".format(
+                                    "Delay before next download: {:.2f} seconds".format(
                                         delay
                                     )
                                 )
@@ -137,22 +132,20 @@ class YTScrapper:
                                 time.sleep(delay)
                                 break
                             except Exception as e:
-                                print(
-                                    f"Wystąpił błąd podczas pobierania z proxy {proxy}: {str(e)}"
-                                )
+                                print(f"An error occurred {proxy}: {str(e)}")
                                 continue
 
-            print("Pobrano wszystkie pliki")
+            print("All files have been downloaded")
         else:
-            print("Understandable, have a great day!")
+            pass
 
     def download_transcription(self, output_path, download):
         if download:
-            transcripts_folder = os.path.join(output_path, "Transkrypcja")
+            transcripts_folder = os.path.join(output_path, "Transcription")
             os.makedirs(transcripts_folder, exist_ok=True)
 
             if len(self.proxies) == 0:
-                for video_id, (url, playlist_id) in self.kompendium.items():
+                for video_id, (url, playlist_id) in self.all_in_one():
                     playlist_folder = os.path.join(transcripts_folder, playlist_id)
                     os.makedirs(playlist_folder, exist_ok=True)
 
@@ -161,7 +154,7 @@ class YTScrapper:
                     )
                     if os.path.exists(transcript_path):
                         print(
-                            f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                            f"Transcription for video ID {video_id} exists, skipping."
                         )
                         continue
 
@@ -191,13 +184,13 @@ class YTScrapper:
                                 text_file.write(text_formatted)
 
                             print(
-                                f"Transkrypcja dla video ID {video_id} została zapisana."
+                                f"Transcription for video ID {video_id} has been downloaded."
                             )
                     except TranscriptsDisabled:
-                        print("Brak dostępnej transkrypcji dla pliku.")
+                        print("No transcript available.")
             else:
                 for proxy in self.proxies:
-                    for video_id, (url, playlist_id) in self.kompendium.items():
+                    for video_id, (url, playlist_id) in self.all_in_one():
                         playlist_folder = os.path.join(transcripts_folder, playlist_id)
                         os.makedirs(playlist_folder, exist_ok=True)
 
@@ -206,7 +199,7 @@ class YTScrapper:
                         )
                         if os.path.exists(transcript_path):
                             print(
-                                f"Transkrypcja dla video ID {video_id} już istnieje. Pomijam pobieranie."
+                                f"Transcription for video ID {video_id} exists, skipping."
                             )
                             continue
 
@@ -238,9 +231,9 @@ class YTScrapper:
                                     text_file.write(text_formatted)
 
                                 print(
-                                    f"Transkrypcja dla video ID {video_id} została zapisana."
+                                    f"Transcription for video ID {video_id} has been downloaded."
                                 )
                         except TranscriptsDisabled:
-                            print("Brak dostępnej transkrypcji dla pliku.")
+                            print("No transcript available.")
         else:
-            print("Understandable, have a great day!")
+            pass
