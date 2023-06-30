@@ -8,7 +8,8 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
 import json
 
-
+# all in one represents all info in one place. It is dictionary with following order: {video_id: (url, playlist_id)}. 
+# proxies is a list of valid proxies to obtain anonymusity
 class YTScrapper:
     def __init__(self) -> None:
         self.all_in_one = {}
@@ -20,7 +21,8 @@ class YTScrapper:
     def extracting_info(self, output_path, playlist_urls, proxy_file_path):
         os.makedirs(os.path.join(output_path, "Audio"), exist_ok=True)
         os.makedirs(os.path.join(output_path, "Transcription"), exist_ok=True)
-
+        
+        # unpacking .txt with proxies to check 
         with open(proxy_file_path, "r") as file:
             for line in file:
                 line = line.strip()
@@ -40,8 +42,10 @@ class YTScrapper:
                     video_id = video["id"]
                     url = video["link"]
                     self.all_in_one[video_id] = (url, playlist_id)
+                # here you can add some new features as playlist_title or playlist_author ect. 
 
     def download_playlist_audio(self, output_path, download):
+        # download options, described in readme
         ydl_opts = {
             "format": "m4a/bestaudio/best",
             "postprocessors": [
@@ -105,6 +109,7 @@ class YTScrapper:
                             print(f"An error occurred {proxy}: {str(e)}")
                             continue
                 else:
+                    # if at least one proxy is valid
                     for proxy in self.proxies:
                         ydl_opts["proxy"] = proxy
                         print("Downloading audio ID:", video_id)
@@ -144,6 +149,7 @@ class YTScrapper:
             transcripts_folder = os.path.join(output_path, "Transcription")
             os.makedirs(transcripts_folder, exist_ok=True)
 
+            # same pattern with proxies as in audio downloader
             if len(self.proxies) == 0:
                 for video_id, (url, playlist_id) in self.all_in_one():
                     playlist_folder = os.path.join(transcripts_folder, playlist_id)
